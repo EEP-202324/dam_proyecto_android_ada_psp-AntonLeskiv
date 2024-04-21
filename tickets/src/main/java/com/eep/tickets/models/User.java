@@ -1,78 +1,95 @@
 package com.eep.tickets.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "user")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(unique = true)
-    private String email;
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
 
-    private String passwordHash;
-    private String firstName;
-    private String lastName;
+	@Column(unique = true)
+	private String email;
 
-    public User() {
-    }
+	private String passwordHash;
+	private String firstName;
+	private String lastName;
 
-    public User(String email, String passwordHash, String firstName, String lastName) {
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
+	public User() {
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public User(String email, String passwordHash, String firstName, String lastName, Role role) {
+		this.email = email;
+		this.passwordHash = passwordHash;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.role = role;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public Role getRole() {
+		return role;
+	}
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
+	public void setRole(Role role) {
+		this.role = role;
+	}
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public String getPasswordHash() {
+		return passwordHash;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public void setPasswordHash(String passwordHash) {
+		this.passwordHash = passwordHash;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" + "id=" + id + ", role=" + role + ", email='" + email + '\'' + ", passwordHash='" + passwordHash
+				+ '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + '}';
+	}
 }
