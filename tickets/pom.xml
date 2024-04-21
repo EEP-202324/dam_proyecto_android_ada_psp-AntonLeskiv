@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.eep</groupId>
-	<artifactId>tickets_api</artifactId>
+	<artifactId>tickets</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Event Ticket Service</name>
 	<description>Servicio para gestión de venta de entradas para eventos</description>
