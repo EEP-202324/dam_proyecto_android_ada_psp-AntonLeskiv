@@ -3,6 +3,7 @@ package com.eep.tickets.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.eep.tickets.models.User;
@@ -12,7 +13,8 @@ import com.eep.tickets.repositories.UserRepository;
 public class UserService {
 
 	private final UserRepository userRepository;
-
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	
 	@Autowired
 	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
@@ -26,7 +28,12 @@ public class UserService {
 		return userRepository.findById(id).orElse(null);
 	}
 
+	public User getByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
 	public User create(User user) {
+//		user.setPasswordHash(encoder.encode(user.getPasswordHash()));
 		return userRepository.save(user);
 	}
 
@@ -34,24 +41,24 @@ public class UserService {
 		userRepository.deleteById(id);
 	}
 
-	public User update(Long id, User userDetails) {
+	public User update(Long id, User updateUserDetails) {
 		User user = userRepository.findById(id).orElse(null);
 
-		// Actualizar solo los campos no nulos del objeto userDetails
-		if (userDetails.getRole() != null) {
-			user.setRole(userDetails.getRole());
+		// Actualizar solo los campos no nulos del objeto updateUserDetails
+		if (updateUserDetails.getRole() != null) {
+			user.setRole(updateUserDetails.getRole());
 		}
-		if (userDetails.getEmail() != null) {
-			user.setEmail(userDetails.getEmail());
+		if (updateUserDetails.getEmail() != null) {
+			user.setEmail(updateUserDetails.getEmail());
 		}
-		if (userDetails.getPasswordHash() != null) {
-			user.setPasswordHash(userDetails.getPasswordHash());
+		if (updateUserDetails.getPasswordHash() != null) {
+			user.setPasswordHash(updateUserDetails.getPasswordHash());
 		}
-		if (userDetails.getFirstName() != null) {
-			user.setFirstName(userDetails.getFirstName());
+		if (updateUserDetails.getFirstName() != null) {
+			user.setFirstName(updateUserDetails.getFirstName());
 		}
-		if (userDetails.getLastName() != null) {
-			user.setLastName(userDetails.getLastName());
+		if (updateUserDetails.getLastName() != null) {
+			user.setLastName(updateUserDetails.getLastName());
 		}
 
 		return userRepository.save(user);

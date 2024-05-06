@@ -1,14 +1,7 @@
 package com.eep.tickets.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.eep.tickets.controllers.AuthenticationController;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "user")
@@ -17,8 +10,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "role_id")
+	@Enumerated(EnumType.STRING)
 	private Role role;
 
 	@Column(unique = true)
@@ -92,4 +84,5 @@ public class User {
 		return "User{" + "id=" + id + ", role=" + role + ", email='" + email + '\'' + ", passwordHash='" + passwordHash
 				+ '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + '}';
 	}
+
 }
