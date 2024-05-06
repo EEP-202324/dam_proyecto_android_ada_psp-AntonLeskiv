@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">tickets-android</string>
+    <string name="login">Inicio de sesión</string>
+    <string name="register">Registro</string>
+    <string name="name">Nombre</string>
+    <string name="lastname">Apellidos</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="hide_or_show_password">Ocultar o ver contraseña</string>
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="register_button">Registrarse</string>
+    <string name="go_to_login">¿Tienes cuenta? Inicia Sesión</string>
+    <string name="go_to_register">¿No tienes cuenta? Regístrate</string>
 </resources>
