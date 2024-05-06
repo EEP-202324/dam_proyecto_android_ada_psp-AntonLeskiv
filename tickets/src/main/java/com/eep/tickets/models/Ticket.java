@@ -1,5 +1,7 @@
 package com.eep.tickets.models;
 
+import java.util.UUID;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -10,20 +12,23 @@ public class Ticket {
 	private Long id;
 
 	@ManyToOne
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	@ManyToOne
+	@JoinColumn(name = "event_id")
 	private Event event;
 
+	@Column(updatable = false, unique = true, nullable = false)
 	private String uuid; // Para el código QR
 
 	public Ticket() {
 	}
 
-	public Ticket(User user, Event event, String uuid) {
+	public Ticket(User user, Event event) {
 		this.user = user;
 		this.event = event;
-		this.uuid = uuid;
+		this.uuid = UUID.randomUUID().toString();
 	}
 
 	public Long getId() {
@@ -61,5 +66,12 @@ public class Ticket {
 	@Override
 	public String toString() {
 		return "Ticket{" + "id=" + id + ", user=" + user + ", event=" + event + ", uuid='" + uuid + '\'' + '}';
+	}
+
+	@PrePersist
+	public void initializeUUID() {
+		if (uuid == null) {
+			uuid = UUID.randomUUID().toString();
+		}
 	}
 }
