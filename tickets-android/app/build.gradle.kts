@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.constraintlayout.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -66,4 +67,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("androidx.navigation:navigation-compose:2.4.0")
+    implementation("androidx.compose.material:material:1.0.1")
+    implementation("androidx.compose.material:material-icons-core:1.1.0")
+    implementation("androidx.compose.material:material-icons-extended:1.1.0")
+    // Versión actual de Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    // Convertidor Gson para Retrofit
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }
