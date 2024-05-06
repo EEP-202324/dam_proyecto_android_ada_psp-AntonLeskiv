@@ -10,5 +10,10 @@ import jakarta.persistence.Table;
 
 public enum Role {
 	ADMIN,
-	USER
+	USER;
+
+	@Override
+	public String toString() {
+		return this.name();
+	}
 }
