@@ -1,6 +1,7 @@
-package com.android.tickets_android.ui.screens
+package com.android.tickets_android.ui.screens.auth
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,22 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,24 +33,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.android.tickets_android.R
+import com.android.tickets_android.api.AuthenticationService
+import com.android.tickets_android.model.AuthenticationResponse
+import com.android.tickets_android.model.UserManager
+import com.android.tickets_android.network.RetrofitClient
+import com.android.tickets_android.ui.screens.Screen
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun RegisterScreen(navController: NavController) {
-    var name by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
+
+    Text(
+        text = "IFEMA TICKETS",
+        fontSize = 50.sp,
+        modifier = Modifier
+            .padding(horizontal = 40.dp)
+            .padding(top = 80.dp)
+            .fillMaxWidth(),
+        style = MaterialTheme.typography.body2,
+        textAlign = TextAlign.Center
+    )
 
     Column(
         modifier = Modifier
@@ -62,15 +78,20 @@ fun RegisterScreen(navController: NavController) {
     ) {
         Text(
             text = stringResource(R.string.register),
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.h1,
             fontSize = 30.sp
         )
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
+            value = firstName,
+            onValueChange = { firstName = it },
             label = { Text(stringResource(R.string.name)) },
-            leadingIcon = { Icon(Icons.Filled.Person, contentDescription = stringResource(R.string.name)) },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.Person,
+                    contentDescription = stringResource(R.string.name)
+                )
+            },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
@@ -79,7 +100,12 @@ fun RegisterScreen(navController: NavController) {
             value = lastName,
             onValueChange = { lastName = it },
             label = { Text(stringResource(R.string.lastname)) },
-            leadingIcon = { Icon(Icons.Filled.Person, contentDescription = stringResource(R.string.lastname)) },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.Person,
+                    contentDescription = stringResource(R.string.lastname)
+                )
+            },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
@@ -88,7 +114,12 @@ fun RegisterScreen(navController: NavController) {
             value = email,
             onValueChange = { email = it },
             label = { Text(stringResource(R.string.email)) },
-            leadingIcon = { Icon(Icons.Filled.Email, contentDescription = stringResource(R.string.email)) },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.Email,
+                    contentDescription = stringResource(R.string.email)
+                )
+            },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
@@ -97,7 +128,12 @@ fun RegisterScreen(navController: NavController) {
             value = password,
             onValueChange = { password = it },
             label = { Text(stringResource(R.string.password)) },
-            leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = stringResource(R.string.password)) },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.Lock,
+                    contentDescription = stringResource(R.string.password)
+                )
+            },
             trailingIcon = {
                 val image = if (passwordVisibility)
                     Icons.Filled.Visibility
@@ -105,7 +141,10 @@ fun RegisterScreen(navController: NavController) {
                     Icons.Filled.VisibilityOff
 
                 IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                    Icon(imageVector = image, contentDescription = stringResource(R.string.hide_or_show_password))
+                    Icon(
+                        imageVector = image,
+                        contentDescription = stringResource(R.string.hide_or_show_password)
+                    )
                 }
             },
             singleLine = true,
@@ -115,9 +154,11 @@ fun RegisterScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(24.dp))
         Button(
             onClick = {
-                // Implementar la logica de registro aquí
+                performRegister(firstName, lastName, email, password, navController)
             },
-            modifier = Modifier.fillMaxWidth(0.7f).height(50.dp)
+            modifier = Modifier
+                .fillMaxWidth(0.7f)
+                .height(50.dp)
         ) {
             Text(
                 stringResource(R.string.register_button),
@@ -135,4 +176,49 @@ fun RegisterScreen(navController: NavController) {
             )
         }
     }
+}
+
+// Función para registrar un usuario
+fun performRegister(
+    firstName: String,
+    lastName: String,
+    email: String,
+    password: String,
+    navController: NavController
+) {
+    val authService = RetrofitClient.instance.create(AuthenticationService::class.java)
+    val userData = mapOf(
+        "firstName" to firstName,
+        "lastName" to lastName,
+        "email" to email,
+        "password" to password
+    )
+    authService.register(userData).enqueue(object : Callback<AuthenticationResponse> {
+
+        override fun onResponse(
+            call: Call<AuthenticationResponse>,
+            response: Response<AuthenticationResponse>
+        ) {
+            if (response.isSuccessful && response.body()?.success == true) {
+                Log.i("Register", "Registro exitoso: ${response.body()}")
+                var role = response.body()?.role
+                var userId = response.body()?.userId
+                if (userId != null) {
+                    UserManager.userId = userId
+                }
+                Log.i("Register", "id: $userId, role: $role")
+                if (role == "ADMIN") {
+                    navController.navigate(Screen.ADMIN)
+                } else if (role == "USER") {
+                    navController.navigate(Screen.USER)
+                }
+            } else {
+                Log.i("Register", "Registro fallido: ${response.errorBody()?.string()}")
+            }
+        }
+
+        override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
+            Log.e("Register", "Error en la red o el servidor: ${t.message}")
+        }
+    })
 }
