@@ -35,7 +35,8 @@ public class AuthenticationController {
 
         if (isAuthenticated) {
             Role role = userService.getByEmail(email).getRole();
-            AuthenticationResponse response = new AuthenticationResponse(true, "Autenticación exitosa.", role.toString() );
+            Long userId = userService.getByEmail(email).getId();
+            AuthenticationResponse response = new AuthenticationResponse(true, "Autenticación exitosa.", userId, role.toString() );
             return ResponseEntity.ok().body(response);
         } else {
             AuthenticationResponse response = new AuthenticationResponse(false, "Credenciales inválidas");
@@ -45,11 +46,15 @@ public class AuthenticationController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> body) {
+        String firstName = body.get("firstName");
+        String lastName = body.get("lastName");
         String email = body.get("email");
-        String password = body.get("password"); // Asumimos que recibimos la contraseña en texto plano para hashearla en el servidor.
+        String password = body.get("password");
 
-        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-            return ResponseEntity.badRequest().body(new AuthenticationResponse(false, "Email y contraseña son requeridos"));
+        // Comprobar que todos los campos no esten vacios
+        if (firstName == null || firstName.isEmpty() || lastName == null || lastName.isEmpty() ||
+                email == null || email.isEmpty() || password == null || password.isEmpty()) {
+            return ResponseEntity.badRequest().body(new AuthenticationResponse(false, "Todos los campos son obligatorios"));
         }
 
         // Comprobar si el usuario ya existe
@@ -64,15 +69,17 @@ public class AuthenticationController {
 
         // Crear y guardar el nuevo usuario
         User newUser = new User();
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
         newUser.setEmail(email);
         newUser.setPasswordHash(passwordHash);
         newUser.setRole(Role.USER);
-        // Establecer otros campos necesarios para el nuevo usuario aquí.
 
         userService.create(newUser);
 
+        Long userId = userService.getByEmail(email).getId();
         // Después de registrar al usuario, podrías autenticarlo y devolver una respuesta exitosa.
-        AuthenticationResponse response = new AuthenticationResponse(true, "Registro exitoso", newUser.getRole().toString());
+        AuthenticationResponse response = new AuthenticationResponse(true, "Registro exitoso", userId, newUser.getRole().toString());
         return ResponseEntity.ok().body(response);
     }
 

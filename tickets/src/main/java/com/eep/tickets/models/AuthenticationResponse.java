@@ -1,27 +1,29 @@
 package com.eep.tickets.models;
 
 public class AuthenticationResponse {
-    private boolean logged;
+    private boolean success;
     private String message;
+    private Long userId;
     private String role;
 
-    public AuthenticationResponse(boolean logged, String message, String role) {
-        this.logged = logged;
+    public AuthenticationResponse(boolean success, String message,Long userId, String role) {
+        this.success = success;
         this.message = message;
+        this.userId = userId;
         this.role = role;
     }
 
-    public AuthenticationResponse(boolean logged, String message) {
-        this.logged = logged;
+    public AuthenticationResponse(boolean success, String message) {
+        this.success = success;
         this.message = message;
     }
 
-    public boolean isLogged() {
-        return logged;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setLogged(boolean logged) {
-        this.logged = logged;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public String getMessage() {
@@ -30,6 +32,14 @@ public class AuthenticationResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getRole() {
