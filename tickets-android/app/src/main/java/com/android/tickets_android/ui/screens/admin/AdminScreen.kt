@@ -1,14 +1,14 @@
-package com.android.tickets_android.ui.screens
+package com.android.tickets_android.ui.screens.admin
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Event
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,14 +42,13 @@ fun AdminScreen(navController: NavController) {
     ) { innerPadding ->
         Surface(modifier = Modifier.padding(innerPadding)) {
             when (selectedTab) {
-                AdminTabItem.Events -> AdminEventsScreen()
+                AdminTabItem.Events -> EventScreen()
             }
         }
     }
 }
 
 @Composable
-fun AdminEventsScreen() {
-    // Contenido de la pantalla Eventos
+fun EventScreen() {
     Text("Pantalla de Eventos de Administrador")
 }
