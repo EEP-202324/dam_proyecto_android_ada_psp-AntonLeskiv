@@ -3,6 +3,8 @@ package com.eep.tickets.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.eep.tickets.models.Event;
@@ -18,8 +20,8 @@ public class EventService {
 		this.eventRepository = eventRepository;
 	}
 
-	public List<Event> getAll() {
-		return eventRepository.findAll();
+	public Page<Event> getAll(Pageable pageable) {
+		return eventRepository.findAll(pageable);
 	}
 
 	public Event getById(Long id) {

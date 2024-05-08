@@ -3,6 +3,9 @@ package com.eep.tickets.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +22,9 @@ public class EventController {
 
 	// GET METHODS
 	@GetMapping("/event")
-	public ResponseEntity<List<Event>> getAll() {
-		List<Event> events = eventService.getAll();
+	public ResponseEntity<Page<Event>> getAllEvents(
+			@PageableDefault(size = 10, sort = "date") Pageable pageable) {
+		Page<Event> events = eventService.getAll(pageable);
 		return ResponseEntity.status(HttpStatus.OK).body(events);
 	}
 
