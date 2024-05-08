@@ -33,7 +33,6 @@ public class UserService {
 	}
 
 	public User create(User user) {
-//		user.setPasswordHash(encoder.encode(user.getPasswordHash()));
 		return userRepository.save(user);
 	}
 
