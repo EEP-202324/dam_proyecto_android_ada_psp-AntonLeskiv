@@ -1,15 +1,15 @@
-package com.android.tickets_android.ui.screens
+package com.android.tickets_android.ui.screens.user
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Difference
 import androidx.compose.material.icons.filled.Event
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,7 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 enum class UserTabItem(val title: String, val icon: ImageVector) {
     Events("Eventos", Icons.Filled.Event),
@@ -25,7 +25,7 @@ enum class UserTabItem(val title: String, val icon: ImageVector) {
 }
 
 @Composable
-fun UserScreen(navController: NavController) {
+fun UserScreen(navController: NavHostController) {
     var selectedTab by remember { mutableStateOf(UserTabItem.Events) }
 
     Scaffold(
@@ -42,24 +42,15 @@ fun UserScreen(navController: NavController) {
             }
         }
     ) { innerPadding ->
-        // El contenido principal de la pantalla se coloca aquí
         Surface(modifier = Modifier.padding(innerPadding)) {
             when (selectedTab) {
-                UserTabItem.Events -> UserEventsScreen()
-                UserTabItem.Tickets -> UserTicketsScreen()
+                UserTabItem.Events -> EventScreen()
+                UserTabItem.Tickets -> TicketScreen()
             }
         }
     }
 }
 
-@Composable
-fun UserEventsScreen() {
-    // Contenido de la pantalla Eventos
-    Text("Pantalla de Eventos de Usuario")
-}
 
-@Composable
-fun UserTicketsScreen() {
-    // Contenido de la pantalla Entradas
-    Text("Pantalla de Entradas de Usuario")
-}
+
+
