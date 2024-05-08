@@ -3,15 +3,13 @@ package com.eep.tickets.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.eep.tickets.models.Ticket;
 import com.eep.tickets.services.TicketService;
@@ -36,10 +34,19 @@ public class TicketController {
 		return ResponseEntity.status(HttpStatus.OK).body(ticket);
 	}
 
+	@GetMapping("/tickets/user/{userId}")
+	public Page<Ticket> getTicketsByUserId(@PathVariable Long userId, @PageableDefault(page = 0, size = 10) Pageable pageable) {
+		return ticketService.getTicketsByUserId(userId, pageable);
+	}
+
 	// POST METHODS
 	@PostMapping("ticket")
-	public ResponseEntity<Ticket> create(@RequestBody Ticket ticket) {
-		Ticket createdTicket = ticketService.create(ticket);
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdTicket);
+	public ResponseEntity<Ticket> create(@RequestParam Long userId, @RequestParam Long eventId) {
+		try {
+			Ticket createdTicket = ticketService.create(userId, eventId);
+			return ResponseEntity.status(HttpStatus.CREATED).body(createdTicket);
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
 	}
 }
