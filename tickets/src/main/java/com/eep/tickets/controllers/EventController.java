@@ -1,6 +1,10 @@
 package com.eep.tickets.controllers;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,7 +39,18 @@ public class EventController {
 	}
 
 	@PostMapping("/event")
-	public ResponseEntity<Event> create(@RequestBody Event event) {
+	public ResponseEntity<Event> create(@RequestBody Map<String, String> eventData) {
+		String name = eventData.get("name");
+		String description = eventData.get("description");
+		String place = eventData.get("place");
+		String date = eventData.get("date");
+
+		String pattern = "dd/MM/yyyy HH:mm";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+		LocalDate localDate = LocalDate.parse(date, formatter);
+		LocalDateTime dateTime = localDate.atStartOfDay();
+		
+		Event event = new Event(name, description, dateTime, place);
 		Event newEvent = eventService.create(event);
 		return ResponseEntity.status(HttpStatus.CREATED).body(newEvent);
 	}
