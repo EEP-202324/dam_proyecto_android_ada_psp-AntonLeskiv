@@ -26,6 +26,7 @@ import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -102,7 +103,10 @@ fun AdminEventScreen() {
         if (events.isNotEmpty()) {
             LazyColumn {
                 items(events) { event ->
-                    EventCard(event)
+                    EventCard(event = event, onDelete = { event ->
+                        deleteEvent(event.id)
+                        events = events.filter { it.id != event.id }
+                    })
                 }
                 item {
                     if (isLoading) {
@@ -165,6 +169,26 @@ fun AdminEventScreen() {
         if (events.isEmpty() && !isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text("No hay eventos disponibles", modifier = Modifier.padding(16.dp))
+            }
+        }
+    }
+}
+
+fun deleteEvent(eventId: Long) {
+    val eventService = RetrofitClient.instance.create(EventService::class.java)
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = eventService.deleteEvent(eventId)
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    Log.i("UserTicketsScreen", "Evento eliminado correctamente: ${response}")
+                } else {
+                    Log.e("UserTicketsScreen", "Error al eliminar el evento: ${response}")
+                }
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Log.e("UserTicketsScreen", "Error al eliminar el evento", e)
             }
         }
     }
@@ -243,10 +267,12 @@ fun addEvent(
     onEventAdded: () -> Unit
 ) {
     val eventService = RetrofitClient.instance.create(EventService::class.java)
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+    val dateTime = LocalDateTime.parse(date, formatter)
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            val response = eventService.createEvent(Event(name, description, place, date))
+            val response = eventService.createEvent(Event(name, description, place, dateTime.toString()))
             Log.d("UserTicketsResponse", "Received Response: $response")
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful && response.body() != null) {
@@ -330,9 +356,9 @@ fun EventSortingOption(
 
 // Composable para mostrar un evento en un Card
 @Composable
-fun EventCard(event: Event) {
+fun EventCard(event: Event, onDelete: (Event) -> Unit) {
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-    val dateTime = LocalDateTime.parse(event.date, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    val dateTime = LocalDateTime.parse(event.date.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     val formattedDate = dateTime.format(formatter)
 
     Card(
@@ -342,7 +368,15 @@ fun EventCard(event: Event) {
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = event.name, style = MaterialTheme.typography.h2)
+            Row {
+                Text(text = event.name, style = MaterialTheme.typography.h2)
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Eliminar",
+                    modifier = Modifier
+                        .clickable { onDelete(event) }
+                )
+            }
             Text(text = event.description, style = MaterialTheme.typography.h5)
             Text(text = "Lugar: ${event.place}", style = MaterialTheme.typography.h6)
             Text(text = "Fecha: $formattedDate", style = MaterialTheme.typography.h6)

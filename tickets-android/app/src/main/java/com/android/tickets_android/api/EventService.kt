@@ -5,6 +5,7 @@ import com.android.tickets_android.model.PagedResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -23,4 +24,7 @@ interface EventService {
 
     @POST("event")
     suspend fun createEvent(@Body event: Event): Response<Event>
+
+    @DELETE("event/{id}")
+    suspend fun deleteEvent(@Path("id") id: Long): Response<Void>
 }

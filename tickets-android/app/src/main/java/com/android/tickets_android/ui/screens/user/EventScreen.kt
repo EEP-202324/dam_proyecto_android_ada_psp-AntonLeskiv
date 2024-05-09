@@ -213,7 +213,7 @@ fun EventSortingOption(
 @Composable
 fun EventCard(event: Event) {
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-    val dateTime = LocalDateTime.parse(event.date, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    val dateTime = LocalDateTime.parse(event.date.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     val formattedDate = dateTime.format(formatter)
 
     Card(
