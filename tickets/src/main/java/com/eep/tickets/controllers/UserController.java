@@ -3,6 +3,7 @@ package com.eep.tickets.controllers;
 import java.util.List;
 import java.util.Map;
 
+import com.eep.tickets.models.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,14 @@ public class UserController {
 	}
 
 	@PostMapping("user")
-	public ResponseEntity<User> create(@RequestBody User user) {
-		User createdUser = userService.create(user);
+	public ResponseEntity<User> create(@RequestBody Map<String, String> body) {
+		String firstName = body.get("firstName");
+		String lastName = body.get("lastName");
+		String email = body.get("email");
+		String password = body.get("password");
+		Role role = Role.valueOf(body.get("role"));
+		User createdUser = new User(email, password, firstName, lastName, role);
+		createdUser = userService.create(createdUser);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
 	}
 

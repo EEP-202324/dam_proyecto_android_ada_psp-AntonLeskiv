@@ -2,6 +2,7 @@ package com.eep.tickets.models;
 
 import com.eep.tickets.controllers.AuthenticationController;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "user")
@@ -23,12 +24,18 @@ public class User {
 	public User() {
 	}
 
-	public User(String email, String passwordHash, String firstName, String lastName, Role role) {
+	public User(String email, String password, String firstName, String lastName, Role role) {
 		this.email = email;
-		this.passwordHash = passwordHash;
+		this.passwordHash = hashPassword(password);
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.role = role;
+	}
+
+	// Método para hashear la contraseña
+	private String hashPassword(String password) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		return passwordEncoder.encode(password);
 	}
 
 	public Long getId() {

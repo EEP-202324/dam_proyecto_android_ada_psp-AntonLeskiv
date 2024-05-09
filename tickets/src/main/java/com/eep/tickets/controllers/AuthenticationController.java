@@ -63,17 +63,8 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthenticationResponse(false, "El email ya está registrado"));
         }
 
-        // Hashear la contraseña
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String passwordHash = encoder.encode(password);
-
         // Crear y guardar el nuevo usuario
-        User newUser = new User();
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setEmail(email);
-        newUser.setPasswordHash(passwordHash);
-        newUser.setRole(Role.USER);
+        User newUser = new User(email, password, firstName, lastName, Role.USER);
 
         userService.create(newUser);
 
