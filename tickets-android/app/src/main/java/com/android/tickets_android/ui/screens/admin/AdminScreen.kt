@@ -42,13 +42,8 @@ fun AdminScreen(navController: NavController) {
     ) { innerPadding ->
         Surface(modifier = Modifier.padding(innerPadding)) {
             when (selectedTab) {
-                AdminTabItem.Events -> EventScreen()
+                AdminTabItem.Events -> AdminEventScreen()
             }
         }
     }
-}
-
-@Composable
-fun EventScreen() {
-    Text("Pantalla de Eventos de Administrador")
 }

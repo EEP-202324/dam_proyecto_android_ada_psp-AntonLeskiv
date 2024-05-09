@@ -22,5 +22,5 @@ interface EventService {
     suspend fun getEventById(@Path("id") id: Long): Call<Event>
 
     @POST("event")
-    suspend fun createEvent(@Body event: Event): Call<Event>
+    suspend fun createEvent(@Body event: Event): Response<Event>
 }

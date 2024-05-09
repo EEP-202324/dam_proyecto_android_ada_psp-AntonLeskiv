@@ -39,7 +39,7 @@ import java.time.format.DateTimeFormatter
 
 // Pantlla principal de la sección de eventos del usuario
 @Composable
-fun EventScreen() {
+fun UserEventScreen() {
     // Instancia del servicio de eventos
     val eventService = RetrofitClient.instance.create(EventService::class.java)
     // Variable para almacenar los eventos
