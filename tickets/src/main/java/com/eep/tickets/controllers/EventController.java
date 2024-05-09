@@ -47,9 +47,8 @@ public class EventController {
 
 		String pattern = "dd/MM/yyyy HH:mm";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-		LocalDate localDate = LocalDate.parse(date, formatter);
-		LocalDateTime dateTime = localDate.atStartOfDay();
-		
+		LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+
 		Event event = new Event(name, description, dateTime, place);
 		Event newEvent = eventService.create(event);
 		return ResponseEntity.status(HttpStatus.CREATED).body(newEvent);
