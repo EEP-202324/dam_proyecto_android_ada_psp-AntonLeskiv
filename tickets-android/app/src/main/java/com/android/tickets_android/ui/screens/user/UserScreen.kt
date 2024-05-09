@@ -44,8 +44,8 @@ fun UserScreen(navController: NavHostController) {
     ) { innerPadding ->
         Surface(modifier = Modifier.padding(innerPadding)) {
             when (selectedTab) {
-                UserTabItem.Events -> EventScreen()
-                UserTabItem.Tickets -> TicketScreen()
+                UserTabItem.Events -> UserEventScreen()
+                UserTabItem.Tickets -> UserTicketScreen()
             }
         }
     }
