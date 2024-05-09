@@ -82,52 +82,54 @@ fun EventScreen() {
     Log.i("UserEventsScreen", "Events: $events")
 
     // Composable para mostrar los eventos paginados
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn {
-            // Mostrar cada evento en un Card
-            items(events) { event ->
-                EventCard(event)
-            }
+    if (!events.isEmpty()) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            LazyColumn {
+                // Mostrar cada evento en un Card
+                items(events) { event ->
+                    EventCard(event)
+                }
 
-            // Mostrar un indicador de carga si se está cargando
-            item {
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier)
+                // Mostrar un indicador de carga si se está cargando
+                item {
+                    if (isLoading) {
+                        CircularProgressIndicator(modifier = Modifier)
+                    }
+                }
+
+                // Botón para cargar más eventos
+                item {
+                    Button(
+                        onClick = { currentPage++ },
+                        enabled = !isLoading,
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Text("Cargar más")
+                    }
                 }
             }
 
-            // Botón para cargar más eventos
-            item {
-                Button(
-                    onClick = { currentPage++ },
-                    enabled = !isLoading,
-                    modifier = Modifier
-                        .padding(16.dp)
-                ) {
-                    Text("Cargar más")
-                }
+            // Botón flotante para filtrar
+            FloatingActionButton(
+                onClick = { showFilterDialog.value = true },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+            ) {
+                Icon(Icons.Filled.FilterList, contentDescription = "Filtro")
             }
-        }
 
-        // Botón flotante para filtrar
-        FloatingActionButton(
-            onClick = { showFilterDialog.value = true },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        ) {
-            Icon(Icons.Filled.FilterList, contentDescription = "Filtro")
-        }
-
-        // Mostrar el pop-up de filtro si showFilterDialog es true
-        if (showFilterDialog.value) {
-            ShowEventFilterDialog(
-                showFilterDialog = showFilterDialog,
-                currentSort = sortCriteria
-            ) { newSortCriteria ->
-                if (sortCriteria != newSortCriteria) {
-                    sortCriteria = newSortCriteria
-                    currentPage = 0  // Restablecer a la primera página
+            // Mostrar el pop-up de filtro si showFilterDialog es true
+            if (showFilterDialog.value) {
+                ShowEventFilterDialog(
+                    showFilterDialog = showFilterDialog,
+                    currentSort = sortCriteria
+                ) { newSortCriteria ->
+                    if (sortCriteria != newSortCriteria) {
+                        sortCriteria = newSortCriteria
+                        currentPage = 0  // Restablecer a la primera página
+                    }
                 }
             }
         }
@@ -221,10 +223,10 @@ fun EventCard(event: Event) {
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = event.name, style = MaterialTheme.typography.h5)
+            Text(text = event.name, style = MaterialTheme.typography.h2)
             Text(text = event.description, style = MaterialTheme.typography.h5)
-            Text(text = "Date: $formattedDate", style = MaterialTheme.typography.h5)
-            Text(text = "Place: ${event.place}", style = MaterialTheme.typography.h5)
+            Text(text = "Lugar: ${event.place}", style = MaterialTheme.typography.h6)
+            Text(text = "Fecha: $formattedDate", style = MaterialTheme.typography.h6)
         }
     }
 }

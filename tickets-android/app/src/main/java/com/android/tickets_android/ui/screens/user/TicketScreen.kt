@@ -1,8 +1,10 @@
 package com.android.tickets_android.ui.screens.user
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +21,8 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -39,12 +43,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.android.tickets_android.api.EventService
 import com.android.tickets_android.api.TicketService
+import com.android.tickets_android.model.Event
 import com.android.tickets_android.model.Ticket
 import com.android.tickets_android.model.UserManager
+import com.android.tickets_android.model.UserManager.userId
 import com.android.tickets_android.network.RetrofitClient
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // Pantlla principal de la sección de tickets del usuario
 @Composable
@@ -53,6 +63,8 @@ fun TicketScreen() {
     val ticketService = RetrofitClient.instance.create(TicketService::class.java)
     // Variable para mostrar el diálogo de filtro
     val showFilterDialog = remember { mutableStateOf(false) }
+    // Variable para mostrar el diálogo de compra de tickets
+    val showPurchaseDialog = remember { mutableStateOf(false) }
     // Variable para almacenar los tickets
     var tickets by remember { mutableStateOf(listOf<Ticket>()) }
     // Variable para mostrar mensajes de error
@@ -134,9 +146,11 @@ fun TicketScreen() {
                 Icon(Icons.Filled.FilterList, contentDescription = "Filtro")
             }
 
+
+
             // Botón flotamte comprar ticket
             FloatingActionButton(
-                onClick = { /*TODO*/ },
+                onClick = { showPurchaseDialog.value = true},
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(bottom = 16.dp, end = 16.dp)
@@ -156,16 +170,131 @@ fun TicketScreen() {
                     }
                 }
             }
+
+            // Mostrar el pop-up de filtro si showFilterDialog es true
+            if (showPurchaseDialog.value) {
+                ShowTicketPurchaseDialog(
+                    showPurchaseDialog = showPurchaseDialog
+                ) { }
+            }
         }
     }
     // Si no hay tickets y no se está cargando, mostrar un mensaje
     // de que no hay mas tickets disponibles
     if (tickets.isEmpty() && !isLoading) {
-        Text(
-            "No hay entradas disponibles", modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+                "No hay entradas disponibles", modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            )
+            // Botón flotamte comprar ticket
+            FloatingActionButton(
+                onClick = { showPurchaseDialog.value = true},
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(bottom = 16.dp, end = 16.dp)
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Agregar")
+            }
+
+            // Mostrar el pop-up de filtro si showFilterDialog es true
+            if (showPurchaseDialog.value) {
+                ShowTicketPurchaseDialog(
+                    showPurchaseDialog = showPurchaseDialog
+                ) { }
+            }
+        }
+    }
+}
+
+@SuppressLint("CoroutineCreationDuringComposition")
+@Composable
+fun ShowTicketPurchaseDialog(showPurchaseDialog: MutableState<Boolean>, content: Any) {
+    var eventService = RetrofitClient.instance.create(EventService::class.java)
+    var events by remember { mutableStateOf(listOf<Event>()) }
+    var selectedEvent by remember { mutableStateOf<Event?>(null) }
+    var expanded by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        try {
+            val response = eventService.getAllEvents(0, 100, listOf("name,asc"))
+            if (response.isSuccessful && response.body() != null) {
+                events = response.body()?.content ?: emptyList()
+            }
+        } catch (e: Exception) {
+            Log.e("UserTicketsScreen", "Error al cargar los eventos", e)
+        }
+    }
+
+    // UI del diálogo
+    AlertDialog(
+        onDismissRequest = { showPurchaseDialog.value = false },
+        title = { Text("Comprar Ticket") },
+        text = {
+            Column {
+                // Desplegable para seleccionar evento
+                Box {
+                    Text(
+                        text = selectedEvent?.name ?: "Seleccionar Evento",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .clickable { expanded = true }
+                            .background(MaterialTheme.colors.surface)
+                            .padding(16.dp)
+                    )
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        events.forEach { event ->
+                            DropdownMenuItem(onClick = {
+                                selectedEvent = event
+                                expanded = false
+                            }) {
+                                Text(text = event.name)
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+                // Lógica para comprar el ticket
+                selectedEvent?.let { event ->
+                    purchaseTicket(event)
+                }
+                showPurchaseDialog.value = false
+            }) {
+                Text("Comprar")
+            }
+        },
+        dismissButton = {
+            Button(onClick = { showPurchaseDialog.value = false }) {
+                Text("Cancelar")
+            }
+        }
+    )
+}
+
+// Función para realizar la compra del ticket
+fun purchaseTicket(event: Event) {
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            userId = UserManager.userId
+            val ticketService = RetrofitClient.instance.create(TicketService::class.java)
+            val response = ticketService.createTicket(userId, event.id).execute()
+            if (response.isSuccessful) {
+                Log.i("PurchaseTicket", "Compra exitosa para el evento: ${event.name}")
+            } else {
+                Log.e("PurchaseTicket", "Error en la compra: ${response.errorBody()?.string()}")
+            }
+        } catch (e: Exception) {
+            Log.e("PurchaseTicket", "Error en la red o el servidor", e)
+        }
     }
 }
 
@@ -255,20 +384,20 @@ fun TicketSortingOption(
 // Composable para mostrar un ticket en un Card
 @Composable
 fun TicketCard(ticket: Ticket) {
-    var showDialog by remember { mutableStateOf(false) }
+    var showQRDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { showDialog = true },
+            .clickable { showQRDialog = true },
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = ticket.event.name, style = MaterialTheme.typography.h2)
-            Text(text = ticket.uuid, style = MaterialTheme.typography.h5)
-            if (showDialog) {
-                showTicketQR(ticket, onDismissRequest = { showDialog = false })
+            Text(text = ticket.uuid, style = MaterialTheme.typography.h6)
+            if (showQRDialog) {
+                showTicketQR(ticket, onDismissRequest = { showQRDialog = false })
             }
         }
     }
