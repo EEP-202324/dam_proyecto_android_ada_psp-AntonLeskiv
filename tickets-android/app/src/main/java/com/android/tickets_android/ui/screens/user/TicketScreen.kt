@@ -41,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.android.tickets_android.api.EventService
 import com.android.tickets_android.api.TicketService
@@ -55,10 +54,12 @@ import com.google.zxing.qrcode.QRCodeWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 // Pantlla principal de la sección de tickets del usuario
 @Composable
-fun TicketScreen() {
+fun UserTicketScreen() {
     //Instancia del servicio de tickets
     val ticketService = RetrofitClient.instance.create(TicketService::class.java)
     // Variable para mostrar el diálogo de filtro
@@ -76,37 +77,41 @@ fun TicketScreen() {
     // Variable para almacenar el criterio predeterminado de orden
     var sortCriteria by remember { mutableStateOf("uuid,asc") }
 
-    // Se ejecuta para cargar los tickets
-    // al principio o cuando se cambia el criterio de orden
-    LaunchedEffect(key1 = currentPage, key2 = sortCriteria) {
+    // Function to load tickets
+    fun loadTickets() {
         isLoading = true
-        val userId = UserManager.userId
-        try {
-            val response = ticketService.getTicketsByUserId(
-                userId,
-                page = currentPage,
-                size = 10,
-                sort = listOf(sortCriteria)
-            )
-            if (response.isSuccessful && response.body() != null) {
-                if (currentPage == 0) tickets = listOf()
-                tickets = tickets + (response.body()?.content
-                    ?: emptyList()) // Añadir los nuevos eventos a la lista existente
-            } else {
-                errorMessage = response.message()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = ticketService.getTicketsByUserId(
+                    UserManager.userId,
+                    page = currentPage,
+                    size = 10,
+                    sort = listOf(sortCriteria)
+                )
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful && response.body() != null) {
+                        if (currentPage == 0) tickets = listOf()
+                        tickets = tickets + (response.body()?.content ?: emptyList())
+                    } else {
+                        errorMessage = response.message()
+                    }
+                }
+            } catch (e: Exception) {
+                errorMessage = e.message
+            } finally {
+                isLoading = false
             }
-        } catch (e: Exception) {
-            errorMessage = e.message
-        } finally {
-            isLoading = false
         }
+    }
+
+    LaunchedEffect(key1 = currentPage, key2 = sortCriteria) {
+        loadTickets()
     }
 
     Log.i("UserTicketsScreen", "Tickets: $tickets")
 
-    // Composable para mostrar los eventos paginados
-    if (!tickets.isEmpty()) {
-        Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (tickets.isNotEmpty()) {
             LazyColumn {
                 // Mostrar cada ticket en un Card
                 items(tickets) { ticket ->
@@ -125,84 +130,62 @@ fun TicketScreen() {
                     Button(
                         onClick = { currentPage++ },
                         enabled = !isLoading,
-                        modifier = Modifier
-                            .padding(16.dp)
+                        modifier = Modifier.padding(16.dp)
                     ) {
                         Text("Cargar más")
                     }
                 }
             }
+        }
 
-            // Botón flotante para filtrar
-            FloatingActionButton(
-                onClick = { showFilterDialog.value = true },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(
-                        bottom = 82.dp,
-                        end = 16.dp
-                    )
-            ) {
-                Icon(Icons.Filled.FilterList, contentDescription = "Filtro")
-            }
+        // Botón flotante para filtrar
+        FloatingActionButton(
+            onClick = { showFilterDialog.value = true },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 82.dp, end = 16.dp)
+        ) {
+            Icon(Icons.Filled.FilterList, contentDescription = "Filtro")
+        }
 
+        // Botón flotamte comprar ticket
+        FloatingActionButton(
+            onClick = { showPurchaseDialog.value = true },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 16.dp, end = 16.dp)
+        ) {
+            Icon(Icons.Filled.Add, contentDescription = "Agregar")
+        }
 
-
-            // Botón flotamte comprar ticket
-            FloatingActionButton(
-                onClick = { showPurchaseDialog.value = true},
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 16.dp, end = 16.dp)
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Agregar")
-            }
-
-            // Mostrar el pop-up de filtro si showFilterDialog es true
-            if (showFilterDialog.value) {
-                ShowTicketFilterDialog(
-                    showFilterDialog = showFilterDialog,
-                    currentSort = sortCriteria
-                ) { newSortCriteria ->
-                    if (sortCriteria != newSortCriteria) {
-                        sortCriteria = newSortCriteria
-                        currentPage = 0  // Restablecer a la primera página
-                    }
+        // Mostrar el pop-up de filtro si showFilterDialog es true
+        if (showFilterDialog.value) {
+            ShowTicketFilterDialog(
+                showFilterDialog = showFilterDialog,
+                currentSort = sortCriteria
+            ) { newSortCriteria ->
+                if (sortCriteria != newSortCriteria) {
+                    sortCriteria = newSortCriteria
+                    currentPage = 0 // Restablecer a la primera página
+                    loadTickets()
                 }
             }
-
-            // Mostrar el pop-up de filtro si showFilterDialog es true
-            if (showPurchaseDialog.value) {
-                ShowTicketPurchaseDialog(
-                    showPurchaseDialog = showPurchaseDialog
-                ) { }
-            }
         }
-    }
-    // Si no hay tickets y no se está cargando, mostrar un mensaje
-    // de que no hay mas tickets disponibles
-    if (tickets.isEmpty() && !isLoading) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Text(
-                "No hay entradas disponibles", modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            )
-            // Botón flotamte comprar ticket
-            FloatingActionButton(
-                onClick = { showPurchaseDialog.value = true},
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 16.dp, end = 16.dp)
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Agregar")
-            }
 
-            // Mostrar el pop-up de filtro si showFilterDialog es true
-            if (showPurchaseDialog.value) {
-                ShowTicketPurchaseDialog(
-                    showPurchaseDialog = showPurchaseDialog
-                ) { }
+        // Mostrar el pop-up de filtro si showFilterDialog es true
+        if (showPurchaseDialog.value) {
+            ShowTicketPurchaseDialog(
+                showPurchaseDialog = showPurchaseDialog,
+                onTicketPurchased = {
+                    currentPage = 0
+                    loadTickets()
+                }
+            )
+        }
+
+        if (tickets.isEmpty() && !isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("No hay entradas disponibles", modifier = Modifier.padding(16.dp))
             }
         }
     }
@@ -210,7 +193,10 @@ fun TicketScreen() {
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun ShowTicketPurchaseDialog(showPurchaseDialog: MutableState<Boolean>, content: Any) {
+fun ShowTicketPurchaseDialog(
+    showPurchaseDialog: MutableState<Boolean>,
+    onTicketPurchased: () -> Unit
+) {
     var eventService = RetrofitClient.instance.create(EventService::class.java)
     var events by remember { mutableStateOf(listOf<Event>()) }
     var selectedEvent by remember { mutableStateOf<Event?>(null) }
@@ -265,7 +251,7 @@ fun ShowTicketPurchaseDialog(showPurchaseDialog: MutableState<Boolean>, content:
             Button(onClick = {
                 // Lógica para comprar el ticket
                 selectedEvent?.let { event ->
-                    purchaseTicket(event)
+                    purchaseTicket(event, onTicketPurchased)
                 }
                 showPurchaseDialog.value = false
             }) {
@@ -281,14 +267,14 @@ fun ShowTicketPurchaseDialog(showPurchaseDialog: MutableState<Boolean>, content:
 }
 
 // Función para realizar la compra del ticket
-fun purchaseTicket(event: Event) {
+fun purchaseTicket(event: Event, onTicketPurchased: () -> Unit) {
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            userId = UserManager.userId
             val ticketService = RetrofitClient.instance.create(TicketService::class.java)
-            val response = ticketService.createTicket(userId, event.id).execute()
+            val response = ticketService.createTicket(UserManager.userId, event.id).execute()
             if (response.isSuccessful) {
                 Log.i("PurchaseTicket", "Compra exitosa para el evento: ${event.name}")
+                onTicketPurchased()
             } else {
                 Log.e("PurchaseTicket", "Error en la compra: ${response.errorBody()?.string()}")
             }
