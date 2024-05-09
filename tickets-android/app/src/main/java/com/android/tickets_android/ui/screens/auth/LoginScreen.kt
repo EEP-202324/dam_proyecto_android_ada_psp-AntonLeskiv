@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -44,6 +45,10 @@ import com.android.tickets_android.model.AuthenticationResponse
 import com.android.tickets_android.model.UserManager
 import com.android.tickets_android.network.RetrofitClient
 import com.android.tickets_android.ui.screens.Screen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -150,32 +155,36 @@ fun LoginScreen(navController: NavController) {
 fun performLogin(email: String, password: String, navController: NavController) {
     val authService = RetrofitClient.instance.create(AuthenticationService::class.java)
     val credentials = mapOf("email" to email, "password" to password)
-    authService.login(credentials).enqueue(object : Callback<AuthenticationResponse> {
 
-        override fun onResponse(
-            call: Call<AuthenticationResponse>,
-            response: Response<AuthenticationResponse>
-        ) {
-            if (response.isSuccessful && response.body()?.success == true) {
-                Log.i("Login", "Inicio de sesión exitoso: ${response.body()}")
-                var role = response.body()?.role
-                var userId = response.body()?.userId
-                if (userId != null) {
-                    UserManager.userId = userId
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = authService.login(credentials).execute()
+
+            // Cambiar al contexto principal para manejar la UI
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful && response.body()?.success == true) {
+                    Log.i("Login", "Inicio de sesión exitoso: ${response.body()}")
+
+                    val role = response.body()?.role
+                    val userId = response.body()?.userId
+                    if (userId != null) {
+                        UserManager.userId = userId
+                    }
+                    Log.i("Register", "id: $userId, role: $role")
+
+                    when (role) {
+                        "ADMIN" -> navController.navigate(Screen.ADMIN)
+                        "USER" -> navController.navigate(Screen.USER)
+                        else -> Log.i("Login", "Rol desconocido: $role")
+                    }
+                } else {
+                    Log.i("Login", "Inicio de sesión fallido: ${response.errorBody()?.string()}")
                 }
-                Log.i("Register", "id: $userId, role: $role")
-                if (role == "ADMIN") {
-                    navController.navigate(Screen.ADMIN)
-                } else if (role == "USER") {
-                    navController.navigate(Screen.USER)
-                }
-            } else {
-                Log.i("Login", "Inicio de sesión fallido: ${response.errorBody()?.string()}")
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Log.e("Login", "Error en la red o el servidor: ${e.message}")
             }
         }
-
-        override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
-            Log.e("Login", "Error en la red o el servidor: ${t.message}")
-        }
-    })
+    }
 }

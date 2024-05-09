@@ -79,7 +79,7 @@ fun EventScreen() {
         }
     }
 
-    Log.e("UserEventsScreen", "Events: $events")
+    Log.i("UserEventsScreen", "Events: $events")
 
     // Composable para mostrar los eventos paginados
     Box(modifier = Modifier.fillMaxSize()) {

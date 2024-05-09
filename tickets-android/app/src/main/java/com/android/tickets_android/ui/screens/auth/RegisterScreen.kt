@@ -46,6 +46,10 @@ import com.android.tickets_android.model.AuthenticationResponse
 import com.android.tickets_android.model.UserManager
 import com.android.tickets_android.network.RetrofitClient
 import com.android.tickets_android.ui.screens.Screen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -193,32 +197,35 @@ fun performRegister(
         "email" to email,
         "password" to password
     )
-    authService.register(userData).enqueue(object : Callback<AuthenticationResponse> {
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = authService.register(userData).execute()
 
-        override fun onResponse(
-            call: Call<AuthenticationResponse>,
-            response: Response<AuthenticationResponse>
-        ) {
-            if (response.isSuccessful && response.body()?.success == true) {
-                Log.i("Register", "Registro exitoso: ${response.body()}")
-                var role = response.body()?.role
-                var userId = response.body()?.userId
-                if (userId != null) {
-                    UserManager.userId = userId
+            // Cambiar al contexto principal para manejar la UI
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful && response.body()?.success == true) {
+                    Log.i("Login", "Inicio de sesión exitoso: ${response.body()}")
+
+                    val role = response.body()?.role
+                    val userId = response.body()?.userId
+                    if (userId != null) {
+                        UserManager.userId = userId
+                    }
+                    Log.i("Register", "id: $userId, role: $role")
+
+                    when (role) {
+                        "ADMIN" -> navController.navigate(Screen.ADMIN)
+                        "USER" -> navController.navigate(Screen.USER)
+                        else -> Log.i("Login", "Rol desconocido: $role")
+                    }
+                } else {
+                    Log.i("Login", "Inicio de sesión fallido: ${response.errorBody()?.string()}")
                 }
-                Log.i("Register", "id: $userId, role: $role")
-                if (role == "ADMIN") {
-                    navController.navigate(Screen.ADMIN)
-                } else if (role == "USER") {
-                    navController.navigate(Screen.USER)
-                }
-            } else {
-                Log.i("Register", "Registro fallido: ${response.errorBody()?.string()}")
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Log.e("Login", "Error en la red o el servidor: ${e.message}")
             }
         }
-
-        override fun onFailure(call: Call<AuthenticationResponse>, t: Throwable) {
-            Log.e("Register", "Error en la red o el servidor: ${t.message}")
-        }
-    })
+    }
 }
