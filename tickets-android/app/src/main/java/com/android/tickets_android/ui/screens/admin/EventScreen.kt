@@ -52,6 +52,7 @@ import java.time.format.TextStyle
 
 
 // Pantlla principal de la sección de eventos del usuario
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun AdminEventScreen() {
     val eventService = RetrofitClient.instance.create(EventService::class.java)
@@ -104,8 +105,12 @@ fun AdminEventScreen() {
             LazyColumn {
                 items(events) { event ->
                     EventCard(event = event, onDelete = { event ->
-                        deleteEvent(event.id)
-                        events = events.filter { it.id != event.id }
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val deleted = deleteEvent(event.id)
+                            if (deleted) {
+                                loadEvents()
+                            }
+                        }
                     })
                 }
                 item {
@@ -174,22 +179,21 @@ fun AdminEventScreen() {
     }
 }
 
-fun deleteEvent(eventId: Long) {
+suspend fun deleteEvent(eventId: Long): Boolean {
     val eventService = RetrofitClient.instance.create(EventService::class.java)
-    CoroutineScope(Dispatchers.IO).launch {
+    return withContext(Dispatchers.IO) {
         try {
             val response = eventService.deleteEvent(eventId)
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    Log.i("UserTicketsScreen", "Evento eliminado correctamente: ${response}")
-                } else {
-                    Log.e("UserTicketsScreen", "Error al eliminar el evento: ${response}")
-                }
+            if (response.isSuccessful) {
+                Log.i("UserTicketsScreen", "Evento eliminado correctamente: ${response}")
+                true
+            } else {
+                Log.e("UserTicketsScreen", "Error al eliminar el evento: ${response}")
+                false
             }
         } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                Log.e("UserTicketsScreen", "Error al eliminar el evento", e)
-            }
+            Log.e("UserTicketsScreen", "Error al eliminar el evento", e)
+            false
         }
     }
 }
