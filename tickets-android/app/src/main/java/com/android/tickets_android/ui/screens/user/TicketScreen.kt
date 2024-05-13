@@ -184,8 +184,15 @@ fun UserTicketScreen() {
         }
 
         if (tickets.isEmpty() && !isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No hay entradas disponibles", modifier = Modifier.padding(16.dp))
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            )
+            {
+                Text(
+                    "No hay entradas disponibles", modifier = Modifier
+                        .padding(16.dp)
+                )
             }
         }
     }

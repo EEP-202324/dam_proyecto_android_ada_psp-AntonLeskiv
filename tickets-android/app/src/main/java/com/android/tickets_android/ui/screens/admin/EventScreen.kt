@@ -3,6 +3,7 @@ package com.android.tickets_android.ui.screens.admin
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -235,7 +236,7 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
                 OutlinedTextField(
                     value = date,
                     onValueChange = { date = it },
-                    label = { Text("Fecha") },
+                    label = { Text("Fecha (01/01/2000 12:00)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
             }
@@ -362,7 +363,7 @@ fun EventSortingOption(
 @Composable
 fun EventCard(event: Event, onDelete: (Event) -> Unit) {
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-    val dateTime = LocalDateTime.parse(event.date.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    val dateTime = LocalDateTime.parse(event.date, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     val formattedDate = dateTime.format(formatter)
 
     Card(
@@ -372,7 +373,10 @@ fun EventCard(event: Event, onDelete: (Event) -> Unit) {
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(text = event.name, style = MaterialTheme.typography.h2)
                 Icon(
                     imageVector = Icons.Filled.Delete,

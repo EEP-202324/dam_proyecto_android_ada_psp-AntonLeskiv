@@ -138,11 +138,15 @@ fun UserEventScreen() {
     // Si no hay eventos y no se está cargando, mostrar un mensaje
     // de que no hay mas eventos disponibles
     if (events.isEmpty() && !isLoading) {
-        Text(
-            "No hay eventos disponibles", modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        )
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                "No hay eventos disponibles", modifier = Modifier
+                    .padding(16.dp)
+            )
+        }
     }
 }
 
