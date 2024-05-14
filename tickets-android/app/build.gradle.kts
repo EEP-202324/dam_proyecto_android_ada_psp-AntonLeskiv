@@ -55,9 +55,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.constraintlayout.compose)
-
-    // Asegúrate de tener solo una implementación de Material 3
-    implementation("androidx.compose.material3:material3:1.1.1")
+    implementation(libs.androidx.material3.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

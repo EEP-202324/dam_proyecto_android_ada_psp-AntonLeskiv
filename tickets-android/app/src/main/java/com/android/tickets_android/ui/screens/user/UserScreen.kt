@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Difference
 import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,7 +22,8 @@ import androidx.navigation.NavHostController
 
 enum class UserTabItem(val title: String, val icon: ImageVector) {
     Events("Eventos", Icons.Filled.Event),
-    Tickets("Entradas", Icons.Filled.Difference)
+    Tickets("Entradas", Icons.Filled.Difference),
+    Profile("Perfil", Icons.Filled.Person)
 }
 
 @Composable
@@ -46,11 +48,8 @@ fun UserScreen(navController: NavHostController) {
             when (selectedTab) {
                 UserTabItem.Events -> UserEventScreen()
                 UserTabItem.Tickets -> UserTicketScreen()
+                UserTabItem.Profile -> UserProfileScreen()
             }
         }
     }
 }
-
-
-
-

@@ -50,9 +50,6 @@ public class UserService {
 		if (updateUserDetails.getEmail() != null) {
 			user.setEmail(updateUserDetails.getEmail());
 		}
-		if (updateUserDetails.getPasswordHash() != null) {
-			user.setPasswordHash(updateUserDetails.getPasswordHash());
-		}
 		if (updateUserDetails.getFirstName() != null) {
 			user.setFirstName(updateUserDetails.getFirstName());
 		}

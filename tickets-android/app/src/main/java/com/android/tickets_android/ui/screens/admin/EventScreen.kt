@@ -84,13 +84,9 @@ fun AdminEventScreen() {
                     }
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    errorMessage = e.message
-                }
+                errorMessage = e.message
             } finally {
-                withContext(Dispatchers.Main) {
-                    isLoading = false
-                }
+                isLoading = false
             }
         }
     }
