@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -30,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key.Companion.D
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -93,6 +97,12 @@ fun LoginScreen(navController: NavController) {
                     contentDescription = stringResource(R.string.email)
                 )
             },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorResource(id = R.color.dark_blue),
+                focusedLabelColor = colorResource(id = R.color.dark_blue),
+                unfocusedLabelColor = colorResource(id = R.color.blue),
+                unfocusedBorderColor = colorResource(id = R.color.blue)
+            ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
@@ -107,6 +117,12 @@ fun LoginScreen(navController: NavController) {
                     contentDescription = stringResource(R.string.password)
                 )
             },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorResource(id = R.color.dark_blue),
+                focusedLabelColor = colorResource(id = R.color.dark_blue),
+                unfocusedLabelColor = colorResource(id = R.color.blue),
+                unfocusedBorderColor = colorResource(id = R.color.blue)
+            ),
             trailingIcon = {
                 val image = if (passwordVisibility)
                     Icons.Filled.Visibility
@@ -129,6 +145,10 @@ fun LoginScreen(navController: NavController) {
             onClick = {
                 performLogin(email, password, navController)
             },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colorResource(id = R.color.blue),
+
+            ),
             modifier = Modifier
                 .fillMaxWidth(0.7f)
                 .height(50.dp)

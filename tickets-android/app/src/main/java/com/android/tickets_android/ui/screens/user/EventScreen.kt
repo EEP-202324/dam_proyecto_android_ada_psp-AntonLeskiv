@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FloatingActionButton
@@ -30,7 +31,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.android.tickets_android.R
 import com.android.tickets_android.api.EventService
 import com.android.tickets_android.model.Event
 import com.android.tickets_android.network.RetrofitClient
@@ -102,8 +109,10 @@ fun UserEventScreen() {
                     Button(
                         onClick = { currentPage++ },
                         enabled = !isLoading,
-                        modifier = Modifier
-                            .padding(16.dp)
+                        modifier = Modifier.padding(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = colorResource(id = R.color.light_blue)
+                        )
                     ) {
                         Text("Cargar más")
                     }
@@ -113,6 +122,7 @@ fun UserEventScreen() {
             // Botón flotante para filtrar
             FloatingActionButton(
                 onClick = { showFilterDialog.value = true },
+                backgroundColor = colorResource(id = R.color.light_blue),
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(16.dp)
@@ -183,13 +193,22 @@ fun ShowEventFilterDialog(
             Button(onClick = {
                 updateSortCriteria(tempSortCriteria) // Actualiza el estado global solo cuando se confirma la selección
                 showFilterDialog.value = false
-            }) {
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.light_blue)
+                )
+            ) {
                 Text("Aceptar")
             }
         },
         // Botón para cancelar la selección
         dismissButton = {
-            Button(onClick = { showFilterDialog.value = false }) {
+            Button(
+                onClick = { showFilterDialog.value = false },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.light_blue)
+                )
+            ) {
                 Text("Cancelar")
             }
         }
@@ -217,20 +236,41 @@ fun EventSortingOption(
 @Composable
 fun EventCard(event: Event) {
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-    val dateTime = LocalDateTime.parse(event.date.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    val dateTime = LocalDateTime.parse(event.date, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     val formattedDate = dateTime.format(formatter)
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = 4.dp
+        elevation = 4.dp,
+        backgroundColor = colorResource(id = R.color.blue)  // Azul claro como color de fondo
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = event.name, style = MaterialTheme.typography.h2)
-            Text(text = event.description, style = MaterialTheme.typography.h5)
-            Text(text = "Lugar: ${event.place}", style = MaterialTheme.typography.h6)
-            Text(text = "Fecha: $formattedDate", style = MaterialTheme.typography.h6)
+            Text(
+                text = event.name,
+                style = MaterialTheme.typography.h5.copy(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                color = Color.Black  // Texto en negro para mayor contraste
+            )
+            Text(
+                text = event.description,
+                style = MaterialTheme.typography.body1,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = "Lugar: ${event.place}",
+                style = MaterialTheme.typography.caption,
+                color = Color.DarkGray
+            )
+            Text(
+                text = "Fecha: $formattedDate",
+                style = MaterialTheme.typography.caption,
+                color = Color.DarkGray
+            )
         }
     }
 }

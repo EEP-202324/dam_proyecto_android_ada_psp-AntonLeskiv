@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FloatingActionButton
@@ -38,8 +39,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.android.tickets_android.R
 import com.android.tickets_android.api.EventService
 import com.android.tickets_android.model.Event
 import com.android.tickets_android.network.RetrofitClient
@@ -119,6 +126,9 @@ fun AdminEventScreen() {
                     Button(
                         onClick = { currentPage++ },
                         enabled = !isLoading,
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = colorResource(id = R.color.light_blue)
+                        ),
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text("Cargar más")
@@ -151,6 +161,7 @@ fun AdminEventScreen() {
 
         FloatingActionButton(
             onClick = { showAddEventDialog.value = true },
+            backgroundColor = colorResource(id = R.color.light_blue),
             modifier = Modifier
                 .padding(bottom = 16.dp, end = 16.dp)
                 .align(Alignment.BottomEnd)
@@ -248,12 +259,21 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
                     onEventAdded()  // Llamar a la función para recargar eventos
                     showAddEventDialog.value = false
                 }
-            }) {
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.light_blue)
+                )
+            ) {
                 Text("Añadir")
             }
         },
         dismissButton = {
-            Button(onClick = { showAddEventDialog.value = false }) {
+            Button(
+                onClick = { showAddEventDialog.value = false },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.light_blue)
+                )
+            ) {
                 Text("Cancelar")
             }
         }
@@ -325,13 +345,21 @@ fun ShowEventFilterDialog(
             Button(onClick = {
                 updateSortCriteria(tempSortCriteria) // Actualiza el estado global solo cuando se confirma la selección
                 showFilterDialog.value = false
-            }) {
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.light_blue)
+                )) {
                 Text("Aceptar")
             }
         },
         // Botón para cancelar la selección
         dismissButton = {
-            Button(onClick = { showFilterDialog.value = false }) {
+            Button(
+                onClick = { showFilterDialog.value = false },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.light_blue)
+                )
+            ) {
                 Text("Cancelar")
             }
         }
@@ -366,24 +394,47 @@ fun EventCard(event: Event, onDelete: (Event) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = 4.dp
+        elevation = 4.dp,
+        backgroundColor = colorResource(id = R.color.blue)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = event.name, style = MaterialTheme.typography.h2)
+                Text(
+                    text = event.name,
+                    style = MaterialTheme.typography.h5.copy(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = Color.Black
+                )
                 Icon(
                     imageVector = Icons.Filled.Delete,
+                    tint = Color.Red,
                     contentDescription = "Eliminar",
                     modifier = Modifier
                         .clickable { onDelete(event) }
+                        .padding(8.dp)
                 )
             }
-            Text(text = event.description, style = MaterialTheme.typography.h5)
-            Text(text = "Lugar: ${event.place}", style = MaterialTheme.typography.h6)
-            Text(text = "Fecha: $formattedDate", style = MaterialTheme.typography.h6)
+            Text(
+                text = event.description,
+                style = MaterialTheme.typography.body1,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = "Lugar: ${event.place}",
+                style = MaterialTheme.typography.caption,
+                color = Color.DarkGray
+            )
+            Text(
+                text = "Fecha: $formattedDate",
+                style = MaterialTheme.typography.caption,
+                color = Color.DarkGray
+            )
         }
     }
 }

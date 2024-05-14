@@ -19,6 +19,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenu
@@ -40,8 +42,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.android.tickets_android.R
 import com.android.tickets_android.api.EventService
 import com.android.tickets_android.api.TicketService
 import com.android.tickets_android.model.Event
@@ -130,7 +137,10 @@ fun UserTicketScreen() {
                     Button(
                         onClick = { currentPage++ },
                         enabled = !isLoading,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = colorResource(id = R.color.light_blue)
+                        )
                     ) {
                         Text("Cargar más")
                     }
@@ -141,6 +151,7 @@ fun UserTicketScreen() {
         // Botón flotante para filtrar
         FloatingActionButton(
             onClick = { showFilterDialog.value = true },
+            backgroundColor = colorResource(id = R.color.light_blue),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 82.dp, end = 16.dp)
@@ -151,6 +162,7 @@ fun UserTicketScreen() {
         // Botón flotamte comprar ticket
         FloatingActionButton(
             onClick = { showPurchaseDialog.value = true },
+            backgroundColor = colorResource(id = R.color.light_blue),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 16.dp, end = 16.dp)
@@ -261,12 +273,21 @@ fun ShowTicketPurchaseDialog(
                     purchaseTicket(event, onTicketPurchased)
                 }
                 showPurchaseDialog.value = false
-            }) {
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.light_blue)
+                )
+            ) {
                 Text("Comprar")
             }
         },
         dismissButton = {
-            Button(onClick = { showPurchaseDialog.value = false }) {
+            Button(
+                onClick = { showPurchaseDialog.value = false },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.light_blue)
+                )
+            ) {
                 Text("Cancelar")
             }
         }
@@ -343,14 +364,22 @@ fun ShowTicketFilterDialog(
         confirmButton = {
             Button(onClick = {
                 updateSortCriteria(tempSortCriteria)
-                showFilterDialog.value = false
-            }) {
+                showFilterDialog.value = false },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.light_blue)
+                )
+            ) {
                 Text("Aceptar")
             }
         },
         // Botón para cancelar la selección
         dismissButton = {
-            Button(onClick = { showFilterDialog.value = false }) {
+            Button(
+                onClick = { showFilterDialog.value = false },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.light_blue)
+                )
+            ) {
                 Text("Cancelar")
             }
         }
@@ -384,17 +413,30 @@ fun TicketCard(ticket: Ticket) {
             .fillMaxWidth()
             .padding(8.dp)
             .clickable { showQRDialog = true },
-        elevation = 4.dp
+        elevation = 4.dp,
+        backgroundColor = colorResource(id = R.color.blue)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = ticket.event.name, style = MaterialTheme.typography.h2)
-            Text(text = ticket.uuid, style = MaterialTheme.typography.h6)
+            Text(
+                text = ticket.event.name,
+                style = MaterialTheme.typography.h5.copy(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                color = Color.Black
+            )
+            Text(
+                text = ticket.uuid,
+                style = MaterialTheme.typography.body2,
+                color = Color.DarkGray
+            )
             if (showQRDialog) {
                 showTicketQR(ticket, onDismissRequest = { showQRDialog = false })
             }
         }
     }
 }
+
 
 // Pop-up para mostrar el código QR del ticket
 @Composable
@@ -410,7 +452,11 @@ fun showTicketQR(ticket: Ticket, onDismissRequest: () -> Unit) {
                     .padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.End
             ) {
-                Button(onClick = onDismissRequest) {
+                Button(
+                    onClick = onDismissRequest,
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = colorResource(id = R.color.blue)
+                    ),) {
                     Text("Cerrar")
                 }
             }

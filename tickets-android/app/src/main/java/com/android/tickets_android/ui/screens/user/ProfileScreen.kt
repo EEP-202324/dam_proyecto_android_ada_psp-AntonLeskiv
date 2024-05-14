@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,9 +25,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.android.tickets_android.R
 import com.android.tickets_android.api.UserService
 import com.android.tickets_android.model.User
 import com.android.tickets_android.model.UserManager
@@ -94,7 +98,14 @@ fun UserProfileScreen() {
             value = userFirstName,
             onValueChange = { userFirstName = it },
             label = { Text("Nombre") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorResource(id = R.color.dark_blue),
+                focusedLabelColor = colorResource(id = R.color.dark_blue),
+                unfocusedLabelColor = colorResource(id = R.color.blue),
+                unfocusedBorderColor = colorResource(id = R.color.blue)
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -103,7 +114,14 @@ fun UserProfileScreen() {
             value = userLastName,
             onValueChange = { userLastName = it },
             label = { Text("Apellidos") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorResource(id = R.color.dark_blue),
+                focusedLabelColor = colorResource(id = R.color.dark_blue),
+                unfocusedLabelColor = colorResource(id = R.color.blue),
+                unfocusedBorderColor = colorResource(id = R.color.blue)
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -113,9 +131,13 @@ fun UserProfileScreen() {
             onValueChange = { userEmail = it },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email
-            )
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorResource(id = R.color.dark_blue),
+                focusedLabelColor = colorResource(id = R.color.dark_blue),
+                unfocusedLabelColor = colorResource(id = R.color.blue),
+                unfocusedBorderColor = colorResource(id = R.color.blue)
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -155,6 +177,9 @@ fun UserProfileScreen() {
                 }
             },
             enabled = !isLoading,
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colorResource(id = R.color.blue)
+            ),
             modifier = Modifier.fillMaxWidth()
         ) {
             if (isLoading) {
