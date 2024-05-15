@@ -6,7 +6,7 @@ public class AuthenticationResponse {
     private Long userId;
     private String role;
 
-    public AuthenticationResponse(boolean success, String message,Long userId, String role) {
+    public AuthenticationResponse(boolean success, String message, Long userId, String role) {
         this.success = success;
         this.message = message;
         this.userId = userId;

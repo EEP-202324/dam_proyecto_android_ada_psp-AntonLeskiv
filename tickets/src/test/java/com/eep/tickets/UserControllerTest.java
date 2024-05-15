@@ -1,26 +1,25 @@
 package com.eep.tickets;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import com.eep.tickets.controllers.UserController;
 import com.eep.tickets.models.Role;
 import com.eep.tickets.models.User;
 import com.eep.tickets.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
@@ -33,11 +32,6 @@ public class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setUp() {
-        // Optional setup if needed
-    }
 
     // GET Tests
     @Test

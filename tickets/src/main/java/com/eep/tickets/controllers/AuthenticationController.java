@@ -8,13 +8,11 @@ import com.eep.tickets.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -36,7 +34,7 @@ public class AuthenticationController {
         if (isAuthenticated) {
             Role role = userService.getByEmail(email).getRole();
             Long userId = userService.getByEmail(email).getId();
-            AuthenticationResponse response = new AuthenticationResponse(true, "Autenticación exitosa.", userId, role.toString() );
+            AuthenticationResponse response = new AuthenticationResponse(true, "Autenticación exitosa.", userId, role.toString());
             return ResponseEntity.ok().body(response);
         } else {
             AuthenticationResponse response = new AuthenticationResponse(false, "Credenciales inválidas");
@@ -73,5 +71,4 @@ public class AuthenticationController {
         AuthenticationResponse response = new AuthenticationResponse(true, "Registro exitoso", userId, newUser.getRole().toString());
         return ResponseEntity.ok().body(response);
     }
-
 }
