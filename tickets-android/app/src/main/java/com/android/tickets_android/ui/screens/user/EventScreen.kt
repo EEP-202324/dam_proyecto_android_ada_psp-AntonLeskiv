@@ -188,11 +188,11 @@ fun ShowEventFilterDialog(
                 }
             }
         },
-        // Botón para confirmar la selección
         confirmButton = {
-            Button(onClick = {
-                updateSortCriteria(tempSortCriteria) // Actualiza el estado global solo cuando se confirma la selección
-                showFilterDialog.value = false
+            Button(
+                onClick = {
+                    updateSortCriteria(tempSortCriteria) // Actualiza el estado global solo cuando se confirma la selección
+                    showFilterDialog.value = false
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(id = R.color.light_blue)
@@ -201,7 +201,6 @@ fun ShowEventFilterDialog(
                 Text("Aceptar")
             }
         },
-        // Botón para cancelar la selección
         dismissButton = {
             Button(
                 onClick = { showFilterDialog.value = false },
@@ -244,7 +243,7 @@ fun EventCard(event: Event) {
             .fillMaxWidth()
             .padding(8.dp),
         elevation = 4.dp,
-        backgroundColor = colorResource(id = R.color.blue)  // Azul claro como color de fondo
+        backgroundColor = colorResource(id = R.color.blue)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -253,7 +252,7 @@ fun EventCard(event: Event) {
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 ),
-                color = Color.Black  // Texto en negro para mayor contraste
+                color = Color.Black
             )
             Text(
                 text = event.description,

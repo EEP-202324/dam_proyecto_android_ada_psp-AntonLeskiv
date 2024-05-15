@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.android.tickets_android.R
 import com.android.tickets_android.api.UserService
@@ -78,7 +77,6 @@ fun UserProfileScreen() {
         }
     }
 
-    // Load profile when the composable is first launched
     LaunchedEffect(Unit) {
         loadProfile(UserManager.userId)
     }

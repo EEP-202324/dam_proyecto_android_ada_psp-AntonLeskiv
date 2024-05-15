@@ -14,7 +14,6 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -32,7 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -45,7 +43,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.android.tickets_android.R
 import com.android.tickets_android.api.AuthenticationService
-import com.android.tickets_android.model.AuthenticationResponse
 import com.android.tickets_android.model.UserManager
 import com.android.tickets_android.network.RetrofitClient
 import com.android.tickets_android.ui.screens.Screen
@@ -53,9 +50,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -150,7 +144,7 @@ fun LoginScreen(navController: NavController) {
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = colorResource(id = R.color.blue),
 
-            ),
+                ),
             modifier = Modifier
                 .fillMaxWidth(0.7f)
                 .height(50.dp)

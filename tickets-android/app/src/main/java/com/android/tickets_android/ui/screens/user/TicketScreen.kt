@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
@@ -54,7 +53,6 @@ import com.android.tickets_android.api.TicketService
 import com.android.tickets_android.model.Event
 import com.android.tickets_android.model.Ticket
 import com.android.tickets_android.model.UserManager
-import com.android.tickets_android.model.UserManager.userId
 import com.android.tickets_android.network.RetrofitClient
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
@@ -267,12 +265,13 @@ fun ShowTicketPurchaseDialog(
             }
         },
         confirmButton = {
-            Button(onClick = {
-                // Lógica para comprar el ticket
-                selectedEvent?.let { event ->
-                    purchaseTicket(event, onTicketPurchased)
-                }
-                showPurchaseDialog.value = false
+            Button(
+                onClick = {
+                    // Lógica para comprar el ticket
+                    selectedEvent?.let { event ->
+                        purchaseTicket(event, onTicketPurchased)
+                    }
+                    showPurchaseDialog.value = false
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(id = R.color.light_blue)
@@ -360,11 +359,12 @@ fun ShowTicketFilterDialog(
                 )
             }
         },
-        // Botón para confirmar la selección
         confirmButton = {
-            Button(onClick = {
-                updateSortCriteria(tempSortCriteria)
-                showFilterDialog.value = false },
+            Button(
+                onClick = {
+                    updateSortCriteria(tempSortCriteria)
+                    showFilterDialog.value = false
+                },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(id = R.color.light_blue)
                 )
@@ -372,7 +372,6 @@ fun ShowTicketFilterDialog(
                 Text("Aceptar")
             }
         },
-        // Botón para cancelar la selección
         dismissButton = {
             Button(
                 onClick = { showFilterDialog.value = false },
@@ -456,7 +455,8 @@ fun showTicketQR(ticket: Ticket, onDismissRequest: () -> Unit) {
                     onClick = onDismissRequest,
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = colorResource(id = R.color.blue)
-                    ),) {
+                    ),
+                ) {
                     Text("Cerrar")
                 }
             }

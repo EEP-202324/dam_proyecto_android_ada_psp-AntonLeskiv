@@ -57,7 +57,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
 
 
 // Pantlla principal de la sección de eventos del usuario
@@ -73,7 +72,7 @@ fun AdminEventScreen() {
     val showAddEventDialog = remember { mutableStateOf(false) }
     var sortCriteria by remember { mutableStateOf("name,asc") }
 
-    // Function to load events
+    // Funcion para cargar eventos
     fun loadEvents() {
         isLoading = true
         CoroutineScope(Dispatchers.IO).launch {
@@ -188,6 +187,7 @@ fun AdminEventScreen() {
     }
 }
 
+// Función para eliminar un evento
 suspend fun deleteEvent(eventId: Long): Boolean {
     val eventService = RetrofitClient.instance.create(EventService::class.java)
     return withContext(Dispatchers.IO) {
@@ -207,7 +207,7 @@ suspend fun deleteEvent(eventId: Long): Boolean {
     }
 }
 
-@SuppressLint("CoroutineCreationDuringComposition")
+// Pop-up para añadir un evento
 @Composable
 fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: () -> Unit) {
     var name by remember { mutableStateOf("") }
@@ -278,16 +278,17 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
             }
         },
         confirmButton = {
-            Button(onClick = {
-                addEvent(
-                    name = name,
-                    description = description,
-                    place = place,
-                    date = date
-                ) {
-                    onEventAdded()  // Llamar a la función para recargar eventos
-                    showAddEventDialog.value = false
-                }
+            Button(
+                onClick = {
+                    addEvent(
+                        name = name,
+                        description = description,
+                        place = place,
+                        date = date
+                    ) {
+                        onEventAdded()  // Llamar a la función para recargar eventos
+                        showAddEventDialog.value = false
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(id = R.color.light_blue)
@@ -322,7 +323,8 @@ fun addEvent(
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            val response = eventService.createEvent(Event(name, description, place, dateTime.toString()))
+            val response =
+                eventService.createEvent(Event(name, description, place, dateTime.toString()))
             Log.d("UserTicketsResponse", "Received Response: $response")
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful && response.body() != null) {
@@ -369,19 +371,19 @@ fun ShowEventFilterDialog(
                 }
             }
         },
-        // Botón para confirmar la selección
         confirmButton = {
-            Button(onClick = {
-                updateSortCriteria(tempSortCriteria) // Actualiza el estado global solo cuando se confirma la selección
-                showFilterDialog.value = false
+            Button(
+                onClick = {
+                    updateSortCriteria(tempSortCriteria) // Actualiza el estado global solo cuando se confirma la selección
+                    showFilterDialog.value = false
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(id = R.color.light_blue)
-                )) {
+                )
+            ) {
                 Text("Aceptar")
             }
         },
-        // Botón para cancelar la selección
         dismissButton = {
             Button(
                 onClick = { showFilterDialog.value = false },

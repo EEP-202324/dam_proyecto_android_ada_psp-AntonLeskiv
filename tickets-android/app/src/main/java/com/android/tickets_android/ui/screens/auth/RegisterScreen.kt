@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.android.tickets_android.R
 import com.android.tickets_android.api.AuthenticationService
-import com.android.tickets_android.model.AuthenticationResponse
 import com.android.tickets_android.model.UserManager
 import com.android.tickets_android.network.RetrofitClient
 import com.android.tickets_android.ui.screens.Screen
@@ -53,9 +52,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 @Composable
 fun RegisterScreen(navController: NavController) {
@@ -151,7 +147,7 @@ fun RegisterScreen(navController: NavController) {
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
 
-        )
+            )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = password,
