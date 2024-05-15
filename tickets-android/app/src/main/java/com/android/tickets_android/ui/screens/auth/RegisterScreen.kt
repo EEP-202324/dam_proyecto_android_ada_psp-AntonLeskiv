@@ -102,7 +102,7 @@ fun RegisterScreen(navController: NavController) {
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = colorResource(id = R.color.dark_blue),
                 focusedLabelColor = colorResource(id = R.color.dark_blue),
-                unfocusedLabelColor = colorResource(id = R.color.blue),
+                unfocusedLabelColor = Color.Gray,
                 unfocusedBorderColor = colorResource(id = R.color.blue)
             ),
             singleLine = true,
@@ -122,7 +122,7 @@ fun RegisterScreen(navController: NavController) {
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = colorResource(id = R.color.dark_blue),
                 focusedLabelColor = colorResource(id = R.color.dark_blue),
-                unfocusedLabelColor = colorResource(id = R.color.blue),
+                unfocusedLabelColor = Color.Gray,
                 unfocusedBorderColor = colorResource(id = R.color.blue)
             ),
             singleLine = true,
@@ -142,7 +142,7 @@ fun RegisterScreen(navController: NavController) {
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = colorResource(id = R.color.dark_blue),
                 focusedLabelColor = colorResource(id = R.color.dark_blue),
-                unfocusedLabelColor = colorResource(id = R.color.blue),
+                unfocusedLabelColor = Color.Gray,
                 unfocusedBorderColor = colorResource(id = R.color.blue)
             ),
             singleLine = true,
@@ -163,7 +163,7 @@ fun RegisterScreen(navController: NavController) {
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = colorResource(id = R.color.dark_blue),
                 focusedLabelColor = colorResource(id = R.color.dark_blue),
-                unfocusedLabelColor = colorResource(id = R.color.blue),
+                unfocusedLabelColor = Color.Gray,
                 unfocusedBorderColor = colorResource(id = R.color.blue)
             ),
             trailingIcon = {

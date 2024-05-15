@@ -26,6 +26,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -223,6 +224,12 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
                     value = name,
                     onValueChange = { name = it },
                     label = { Text("Nombre") },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = colorResource(id = R.color.dark_blue),
+                        focusedLabelColor = colorResource(id = R.color.dark_blue),
+                        unfocusedLabelColor = Color.Gray,
+                        unfocusedBorderColor = colorResource(id = R.color.blue)
+                    ),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -230,6 +237,12 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
                     value = description,
                     onValueChange = { description = it },
                     label = { Text("Descripción") },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = colorResource(id = R.color.dark_blue),
+                        focusedLabelColor = colorResource(id = R.color.dark_blue),
+                        unfocusedLabelColor = Color.Gray,
+                        unfocusedBorderColor = colorResource(id = R.color.blue)
+                    ),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -237,12 +250,24 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
                     value = place,
                     onValueChange = { place = it },
                     label = { Text("Lugar") },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = colorResource(id = R.color.dark_blue),
+                        focusedLabelColor = colorResource(id = R.color.dark_blue),
+                        unfocusedLabelColor = Color.Gray,
+                        unfocusedBorderColor = colorResource(id = R.color.blue)
+                    ),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = date,
                     onValueChange = { date = it },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = colorResource(id = R.color.dark_blue),
+                        focusedLabelColor = colorResource(id = R.color.dark_blue),
+                        unfocusedLabelColor = Color.Gray,
+                        unfocusedBorderColor = colorResource(id = R.color.blue)
+                    ),
                     label = { Text("Fecha (01/01/2000 12:00)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
