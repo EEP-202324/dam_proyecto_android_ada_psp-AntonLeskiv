@@ -32,13 +32,25 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(user);
 	}
 
-	@PostMapping("user")
+	@PostMapping("/user")
 	public ResponseEntity<User> create(@RequestBody Map<String, String> body) {
 		String firstName = body.get("firstName");
 		String lastName = body.get("lastName");
 		String email = body.get("email");
 		String password = body.get("password");
-		Role role = Role.valueOf(body.get("role"));
+		String roleStr = body.get("role");
+
+		if (firstName == null || lastName == null || email == null || password == null || roleStr == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+
+		Role role;
+		try {
+			role = Role.valueOf(roleStr);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+
 		User createdUser = new User(email, password, firstName, lastName, role);
 		createdUser = userService.create(createdUser);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
@@ -63,13 +75,21 @@ public class UserController {
 	@PutMapping("/user/{id}")
 	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) {
 		User updatedUser = userService.update(id, user);
+		if (updatedUser == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
 	}
 
 	// DELETE METHODS
 	@DeleteMapping("/user/{id}")
-	public void delete(@PathVariable Long id) {
-		userService.delete(id);
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		try {
+			userService.delete(id);
+			return ResponseEntity.status(HttpStatus.OK).build();
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
 	}
 
 }
