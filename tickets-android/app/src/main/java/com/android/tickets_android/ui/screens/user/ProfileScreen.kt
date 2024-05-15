@@ -103,7 +103,8 @@ fun UserProfileScreen() {
                 focusedBorderColor = colorResource(id = R.color.dark_blue),
                 focusedLabelColor = colorResource(id = R.color.dark_blue),
                 unfocusedLabelColor = Color.Gray,
-                unfocusedBorderColor = colorResource(id = R.color.blue)
+                unfocusedBorderColor = colorResource(id = R.color.blue),
+                cursorColor = colorResource(id = R.color.blue)
             ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
@@ -119,7 +120,8 @@ fun UserProfileScreen() {
                 focusedBorderColor = colorResource(id = R.color.dark_blue),
                 focusedLabelColor = colorResource(id = R.color.dark_blue),
                 unfocusedLabelColor = Color.Gray,
-                unfocusedBorderColor = colorResource(id = R.color.blue)
+                unfocusedBorderColor = colorResource(id = R.color.blue),
+                cursorColor = colorResource(id = R.color.blue)
             ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
@@ -135,7 +137,8 @@ fun UserProfileScreen() {
                 focusedBorderColor = colorResource(id = R.color.dark_blue),
                 focusedLabelColor = colorResource(id = R.color.dark_blue),
                 unfocusedLabelColor = Color.Gray,
-                unfocusedBorderColor = colorResource(id = R.color.blue)
+                unfocusedBorderColor = colorResource(id = R.color.blue),
+                cursorColor = colorResource(id = R.color.blue)
             ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
