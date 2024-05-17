@@ -31,6 +31,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    // POST METHODS
     @PostMapping("/user")
     public ResponseEntity<User> create(@RequestBody Map<String, String> body) {
         String firstName = body.get("firstName");

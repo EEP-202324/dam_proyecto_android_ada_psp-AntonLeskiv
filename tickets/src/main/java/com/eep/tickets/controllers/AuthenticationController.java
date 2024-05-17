@@ -25,6 +25,7 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    // POST METHODS
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
         String email = body.get("email");
@@ -63,11 +64,9 @@ public class AuthenticationController {
 
         // Crear y guardar el nuevo usuario
         User newUser = new User(email, password, firstName, lastName, Role.USER);
-
         userService.create(newUser);
 
         Long userId = userService.getByEmail(email).getId();
-        // Después de registrar al usuario, podrías autenticarlo y devolver una respuesta exitosa.
         AuthenticationResponse response = new AuthenticationResponse(true, "Registro exitoso", userId, newUser.getRole().toString());
         return ResponseEntity.ok().body(response);
     }

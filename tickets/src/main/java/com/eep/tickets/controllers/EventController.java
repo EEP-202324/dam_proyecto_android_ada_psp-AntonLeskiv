@@ -35,6 +35,7 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body(event);
     }
 
+    // POST METHODS
     @PostMapping("/event")
     public ResponseEntity<Event> create(@RequestBody Map<String, String> eventData) {
         String name = eventData.get("name");
@@ -42,15 +43,12 @@ public class EventController {
         String place = eventData.get("place");
         LocalDateTime date = LocalDateTime.parse(eventData.get("date"));
 
-//		String pattern = "dd/MM/yyyy HH:mm";
-//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-//		LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
-//
         Event event = new Event(name, description, date, place);
         Event newEvent = eventService.create(event);
         return ResponseEntity.status(HttpStatus.CREATED).body(newEvent);
     }
 
+    // DELETE METHODS
     @DeleteMapping("/event/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         eventService.delete(id);
