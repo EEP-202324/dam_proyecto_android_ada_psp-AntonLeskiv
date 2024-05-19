@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -140,7 +141,7 @@ fun UserTicketScreen() {
                             backgroundColor = colorResource(id = R.color.light_blue)
                         )
                     ) {
-                        Text("Cargar más")
+                        Text(stringResource(id = R.string.load_more))
                     }
                 }
             }
@@ -154,7 +155,7 @@ fun UserTicketScreen() {
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 82.dp, end = 16.dp)
         ) {
-            Icon(Icons.Filled.FilterList, contentDescription = "Filtro")
+            Icon(Icons.Filled.FilterList, contentDescription = stringResource(id = R.string.filter))
         }
 
         // Botón flotamte comprar ticket
@@ -165,7 +166,7 @@ fun UserTicketScreen() {
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 16.dp, end = 16.dp)
         ) {
-            Icon(Icons.Filled.Add, contentDescription = "Agregar")
+            Icon(Icons.Filled.Add, contentDescription = stringResource(id = R.string.add))
         }
 
         // Mostrar el pop-up de filtro si showFilterDialog es true
@@ -200,7 +201,7 @@ fun UserTicketScreen() {
             )
             {
                 Text(
-                    "No hay entradas disponibles", modifier = Modifier
+                    stringResource(id = R.string.no_tickets), modifier = Modifier
                         .padding(16.dp)
                 )
             }
@@ -233,13 +234,13 @@ fun ShowTicketPurchaseDialog(
     // UI del diálogo
     AlertDialog(
         onDismissRequest = { showPurchaseDialog.value = false },
-        title = { Text("Comprar Ticket") },
+        title = { Text(stringResource(id = R.string.buy_ticket)) },
         text = {
             Column {
                 // Desplegable para seleccionar evento
                 Box {
                     Text(
-                        text = selectedEvent?.name ?: "Seleccionar Evento",
+                        text = selectedEvent?.name ?: stringResource(id = R.string.select_event),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
@@ -277,7 +278,7 @@ fun ShowTicketPurchaseDialog(
                     backgroundColor = colorResource(id = R.color.light_blue)
                 )
             ) {
-                Text("Comprar")
+                Text(stringResource(id = R.string.buy))
             }
         },
         dismissButton = {
@@ -287,7 +288,7 @@ fun ShowTicketPurchaseDialog(
                     backgroundColor = colorResource(id = R.color.light_blue)
                 )
             ) {
-                Text("Cancelar")
+                Text(stringResource(id = R.string.cancel))
             }
         }
     )
@@ -322,11 +323,11 @@ fun ShowTicketFilterDialog(
 
     AlertDialog(
         onDismissRequest = { showFilterDialog.value = false },
-        title = { Text("Filtrar y ordenar") },
+        title = { Text(stringResource(id = R.string.filter_and_sort)) },
         text = {
             Column {
                 TicketSortingOption(
-                    label = "UUID Ascendente",
+                    label = stringResource(id = R.string.uuid) + " " + stringResource(id = R.string.asc),
                     sortValue = "uuid,asc",
                     currentSort = tempSortCriteria,
                     onSelectionChanged = { newSort ->
@@ -334,7 +335,7 @@ fun ShowTicketFilterDialog(
                     }
                 )
                 TicketSortingOption(
-                    label = "UUID Descendente",
+                    label = stringResource(id = R.string.uuid) + " " + stringResource(id = R.string.desc),
                     sortValue = "uuid,desc",
                     currentSort = tempSortCriteria,
                     onSelectionChanged = { newSort ->
@@ -342,7 +343,7 @@ fun ShowTicketFilterDialog(
                     }
                 )
                 TicketSortingOption(
-                    label = "Nombre Evento Ascendente",
+                    label = stringResource(id = R.string.name) + " " + stringResource(id = R.string.asc),
                     sortValue = "event.name,asc",
                     currentSort = tempSortCriteria,
                     onSelectionChanged = { newSort ->
@@ -350,7 +351,7 @@ fun ShowTicketFilterDialog(
                     }
                 )
                 TicketSortingOption(
-                    label = "Nombre Evento Descendente",
+                    label = stringResource(id = R.string.name) + " " + stringResource(id = R.string.desc),
                     sortValue = "event.name,desc",
                     currentSort = tempSortCriteria,
                     onSelectionChanged = { newSort ->
@@ -369,7 +370,7 @@ fun ShowTicketFilterDialog(
                     backgroundColor = colorResource(id = R.color.light_blue)
                 )
             ) {
-                Text("Aceptar")
+                Text(stringResource(id = R.string.accept))
             }
         },
         dismissButton = {
@@ -379,7 +380,7 @@ fun ShowTicketFilterDialog(
                     backgroundColor = colorResource(id = R.color.light_blue)
                 )
             ) {
-                Text("Cancelar")
+                Text(stringResource(id = R.string.cancel))
             }
         }
     )
@@ -457,17 +458,17 @@ fun showTicketQR(ticket: Ticket, onDismissRequest: () -> Unit) {
                         backgroundColor = colorResource(id = R.color.blue)
                     ),
                 ) {
-                    Text("Cerrar")
+                    Text(stringResource(id = R.string.close))
                 }
             }
         },
         text = {
             Column {
-                Text(text = "Evento: ${ticket.event.name}")
-                Text(text = "ID del ticket: ${ticket.uuid}")
+                Text(text = stringResource(id = R.string.event) + ": ${ticket.event.name}")
+                Text(text = stringResource(id = R.string.ticket_id) + ": ${ticket.uuid}")
                 Spacer(modifier = Modifier.height(16.dp))
                 bitmap?.let {
-                    Image(bitmap = it.asImageBitmap(), contentDescription = "Código QR del Ticket")
+                    Image(bitmap = it.asImageBitmap(), contentDescription = stringResource(id = R.string.ticket_qr_code))
                 }
             }
         }

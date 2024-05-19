@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -131,7 +132,7 @@ fun AdminEventScreen() {
                         ),
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Text("Cargar más")
+                        Text(stringResource(id = R.string.load_more))
                     }
                 }
             }
@@ -139,11 +140,12 @@ fun AdminEventScreen() {
 
         FloatingActionButton(
             onClick = { showFilterDialog.value = true },
+            backgroundColor = colorResource(id = R.color.light_blue),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp)
+                .padding(bottom = 82.dp, end = 16.dp)
         ) {
-            Icon(Icons.Filled.FilterList, contentDescription = "Filtro")
+            Icon(Icons.Filled.FilterList, contentDescription = stringResource(id = R.string.filter))
         }
 
         if (showFilterDialog.value) {
@@ -166,7 +168,7 @@ fun AdminEventScreen() {
                 .padding(bottom = 16.dp, end = 16.dp)
                 .align(Alignment.BottomEnd)
         ) {
-            Icon(Icons.Filled.Add, contentDescription = "Agregar")
+            Icon(Icons.Filled.Add, contentDescription = stringResource(id =  R.string.add))
         }
 
         if (showAddEventDialog.value) {
@@ -181,7 +183,7 @@ fun AdminEventScreen() {
 
         if (events.isEmpty() && !isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No hay eventos disponibles", modifier = Modifier.padding(16.dp))
+                Text(stringResource(id = R.string.no_events), modifier = Modifier.padding(16.dp))
             }
         }
     }
@@ -217,13 +219,13 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
 
     AlertDialog(
         onDismissRequest = { showAddEventDialog.value = false },
-        title = { Text("Añadir evento nuevo") },
+        title = { Text(stringResource(id = R.string.add_new_event)) },
         text = {
             Column {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Nombre") },
+                    label = { Text(stringResource(id = R.string.name)) },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = colorResource(id = R.color.dark_blue),
                         focusedLabelColor = colorResource(id = R.color.dark_blue),
@@ -237,7 +239,7 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Descripción") },
+                    label = { Text(stringResource(id = R.string.description)) },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = colorResource(id = R.color.dark_blue),
                         focusedLabelColor = colorResource(id = R.color.dark_blue),
@@ -251,7 +253,7 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
                 OutlinedTextField(
                     value = place,
                     onValueChange = { place = it },
-                    label = { Text("Lugar") },
+                    label = { Text(stringResource(id = R.string.place)) },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = colorResource(id = R.color.dark_blue),
                         focusedLabelColor = colorResource(id = R.color.dark_blue),
@@ -272,7 +274,7 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
                         unfocusedBorderColor = colorResource(id = R.color.blue),
                         cursorColor = colorResource(id = R.color.blue)
                     ),
-                    label = { Text("Fecha (01/01/2000 12:00)") },
+                    label = { Text(stringResource(id = R.string.date)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
             }
@@ -294,7 +296,7 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
                     backgroundColor = colorResource(id = R.color.light_blue)
                 )
             ) {
-                Text("Añadir")
+                Text(stringResource(id = R.string.add))
             }
         },
         dismissButton = {
@@ -304,7 +306,7 @@ fun ShowAddEventDialog(showAddEventDialog: MutableState<Boolean>, onEventAdded: 
                     backgroundColor = colorResource(id = R.color.light_blue)
                 )
             ) {
-                Text("Cancelar")
+                Text(stringResource(id = R.string.cancel))
             }
         }
     )
@@ -354,19 +356,19 @@ fun ShowEventFilterDialog(
 
     AlertDialog(
         onDismissRequest = { showFilterDialog.value = false },
-        title = { Text("Filtrar y ordenar") },
+        title = { Text(stringResource(id = R.string.filter_and_sort)) },
         text = {
             Column {
-                EventSortingOption("Nombre Ascendente", "name,asc", tempSortCriteria) {
+                EventSortingOption(stringResource(id = R.string.name) + " " + stringResource(id = R.string.asc), "name,asc", tempSortCriteria) {
                     tempSortCriteria = it
                 }
-                EventSortingOption("Nombre Descendente", "name,desc", tempSortCriteria) {
+                EventSortingOption(stringResource(id = R.string.name) + " " + stringResource(id = R.string.desc), "name,desc", tempSortCriteria) {
                     tempSortCriteria = it
                 }
-                EventSortingOption("Lugar Ascendente", "place,asc", tempSortCriteria) {
+                EventSortingOption(stringResource(id = R.string.place) + " " + stringResource(id = R.string.asc), "place,asc", tempSortCriteria) {
                     tempSortCriteria = it
                 }
-                EventSortingOption("Lugar Descendente", "place,desc", tempSortCriteria) {
+                EventSortingOption(stringResource(id = R.string.place) + " " + stringResource(id = R.string.desc), "place,desc", tempSortCriteria) {
                     tempSortCriteria = it
                 }
             }
@@ -381,7 +383,7 @@ fun ShowEventFilterDialog(
                     backgroundColor = colorResource(id = R.color.light_blue)
                 )
             ) {
-                Text("Aceptar")
+                Text(stringResource(id = R.string.accept))
             }
         },
         dismissButton = {
@@ -391,7 +393,7 @@ fun ShowEventFilterDialog(
                     backgroundColor = colorResource(id = R.color.light_blue)
                 )
             ) {
-                Text("Cancelar")
+                Text(stringResource(id = R.string.cancel))
             }
         }
     )
@@ -444,7 +446,7 @@ fun EventCard(event: Event, onDelete: (Event) -> Unit) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
                     tint = Color.Red,
-                    contentDescription = "Eliminar",
+                    contentDescription = stringResource(id = R.string.delete),
                     modifier = Modifier
                         .clickable { onDelete(event) }
                         .padding(8.dp)
@@ -457,12 +459,12 @@ fun EventCard(event: Event, onDelete: (Event) -> Unit) {
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = "Lugar: ${event.place}",
+                text = stringResource(id = R.string.place) + ": ${event.place}",
                 style = MaterialTheme.typography.caption,
                 color = Color.DarkGray
             )
             Text(
-                text = "Fecha: $formattedDate",
+                stringResource(id = R.string.date) + ": $formattedDate",
                 style = MaterialTheme.typography.caption,
                 color = Color.DarkGray
             )

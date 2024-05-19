@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.android.tickets_android.R
@@ -88,14 +89,14 @@ fun UserProfileScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Perfil de Usuario", style = MaterialTheme.typography.h4)
+        Text(text = stringResource(id = R.string.user_profile), style = MaterialTheme.typography.h4)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = userFirstName,
             onValueChange = { userFirstName = it },
-            label = { Text("Nombre") },
+            label = { Text(stringResource(id = R.string.name)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = colorResource(id = R.color.dark_blue),
@@ -112,7 +113,7 @@ fun UserProfileScreen() {
         OutlinedTextField(
             value = userLastName,
             onValueChange = { userLastName = it },
-            label = { Text("Apellidos") },
+            label = { Text(stringResource(id = R.string.lastname)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = colorResource(id = R.color.dark_blue),
@@ -129,7 +130,7 @@ fun UserProfileScreen() {
         OutlinedTextField(
             value = userEmail,
             onValueChange = { userEmail = it },
-            label = { Text("Email") },
+            label = { Text(stringResource(id = R.string.email)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = colorResource(id = R.color.dark_blue),
@@ -158,7 +159,7 @@ fun UserProfileScreen() {
                         ).execute()
                         withContext(Dispatchers.Main) {
                             if (updateResponse.isSuccessful) {
-                                successMessage = "Perfil actualizado con éxito"
+                                successMessage = R.string.profile_updated.toString()
                                 errorMessage = null
                             } else {
                                 errorMessage = updateResponse.message()
@@ -186,7 +187,7 @@ fun UserProfileScreen() {
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier)
             } else {
-                Text("Actualizar")
+                Text(stringResource(id = R.string.update))
             }
         }
 

@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -114,7 +115,7 @@ fun UserEventScreen() {
                             backgroundColor = colorResource(id = R.color.light_blue)
                         )
                     ) {
-                        Text("Cargar más")
+                        Text(stringResource(id = R.string.load_more))
                     }
                 }
             }
@@ -127,7 +128,7 @@ fun UserEventScreen() {
                     .align(Alignment.BottomEnd)
                     .padding(16.dp)
             ) {
-                Icon(Icons.Filled.FilterList, contentDescription = "Filtro")
+                Icon(Icons.Filled.FilterList, contentDescription = stringResource(id = R.string.filter))
             }
 
             // Mostrar el pop-up de filtro si showFilterDialog es true
@@ -153,7 +154,7 @@ fun UserEventScreen() {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                "No hay eventos disponibles", modifier = Modifier
+                stringResource(id = R.string.no_events), modifier = Modifier
                     .padding(16.dp)
             )
         }
@@ -171,19 +172,19 @@ fun ShowEventFilterDialog(
 
     AlertDialog(
         onDismissRequest = { showFilterDialog.value = false },
-        title = { Text("Filtrar y ordenar") },
+        title = { Text(stringResource(id = R.string.filter_and_sort)) },
         text = {
             Column {
-                EventSortingOption("Nombre Ascendente", "name,asc", tempSortCriteria) {
+                EventSortingOption(stringResource(id = R.string.name) + " " + stringResource(id = R.string.asc), "name,asc", tempSortCriteria) {
                     tempSortCriteria = it
                 }
-                EventSortingOption("Nombre Descendente", "name,desc", tempSortCriteria) {
+                EventSortingOption(stringResource(id = R.string.name) + " " + stringResource(id = R.string.desc), "name,desc", tempSortCriteria) {
                     tempSortCriteria = it
                 }
-                EventSortingOption("Lugar Ascendente", "place,asc", tempSortCriteria) {
+                EventSortingOption(stringResource(id = R.string.place) + " " + stringResource(id = R.string.asc), "place,asc", tempSortCriteria) {
                     tempSortCriteria = it
                 }
-                EventSortingOption("Lugar Descendente", "place,desc", tempSortCriteria) {
+                EventSortingOption(stringResource(id = R.string.place) + " " + stringResource(id = R.string.desc), "place,desc", tempSortCriteria) {
                     tempSortCriteria = it
                 }
             }
@@ -208,7 +209,7 @@ fun ShowEventFilterDialog(
                     backgroundColor = colorResource(id = R.color.light_blue)
                 )
             ) {
-                Text("Cancelar")
+                Text(stringResource(id = R.string.cancel))
             }
         }
     )
@@ -261,12 +262,12 @@ fun EventCard(event: Event) {
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = "Lugar: ${event.place}",
+                text = stringResource(id = R.string.place) + ": ${event.place}",
                 style = MaterialTheme.typography.caption,
                 color = Color.DarkGray
             )
             Text(
-                text = "Fecha: $formattedDate",
+                text = stringResource(id = R.string.date) + ": $formattedDate",
                 style = MaterialTheme.typography.caption,
                 color = Color.DarkGray
             )

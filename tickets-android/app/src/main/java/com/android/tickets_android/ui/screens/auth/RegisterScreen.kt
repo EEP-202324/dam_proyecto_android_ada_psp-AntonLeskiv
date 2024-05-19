@@ -62,7 +62,7 @@ fun RegisterScreen(navController: NavController) {
     var passwordVisibility by remember { mutableStateOf(false) }
 
     Text(
-        text = "IFEMA TICKETS",
+        text = stringResource(id = R.string.app_name),
         fontSize = 50.sp,
         modifier = Modifier
             .padding(horizontal = 40.dp)
@@ -242,7 +242,7 @@ fun performRegister(
                     if (userId != null) {
                         UserManager.userId = userId
                     }
-                    Log.i("Register", "id: $userId, role: $role")
+                    Log.i("Login", "id: $userId, role: $role")
 
                     when (role) {
                         "ADMIN" -> navController.navigate(Screen.ADMIN)
